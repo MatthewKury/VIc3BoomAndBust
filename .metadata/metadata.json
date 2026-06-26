@@ -1,0 +1,13 @@
+{
+  "name" : "LiteratureForThePeople",
+	"id" : "Vic3LiteratureForThePeople/MatthewKury/github.com",
+  "version" : "0.1-a",
+  "game_id": "victoria3",
+  "supported_game_version" : "1.12",
+  "short_description" : "Adds printing industry to the game to capture the emergence of the novel in to the common sphere.",
+  "tags" : ["gameplay"],
+  "relationships" : [],
+  "game_custom_data" : {
+    "multiplayer_synchronized" : true
+  }
+}
