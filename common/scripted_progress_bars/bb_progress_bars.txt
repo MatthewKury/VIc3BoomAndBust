@@ -1,0 +1,42 @@
+﻿# ============================================================
+#  Boom & Bust — Scripted Progress Bars
+#
+#  All three bars start static (no monthly_progress).
+#  Values change only through events/decisions — to be
+#  implemented in the next phase.
+#
+#  Bar ranges: 0–100 with five bands of 20 each.
+# ============================================================
+
+bb_market_health_bar = {
+    name = "bb_market_health_bar"
+    desc = "bb_market_health_bar_desc"
+
+    double_sided_gold = yes
+
+    start_value = 50
+    min_value = 0
+    max_value = 100
+}
+
+bb_risk_stance_bar = {
+    name = "bb_risk_stance_bar"
+    desc = "bb_risk_stance_bar_desc"
+
+    default_green = yes
+
+    start_value = 50
+    min_value = 0
+    max_value = 100
+}
+
+bb_monopoly_power_bar = {
+    name = "bb_monopoly_power_bar"
+    desc = "bb_monopoly_power_bar_desc"
+
+    default_bad = yes
+
+    start_value = 10
+    min_value = 0
+    max_value = 100
+}

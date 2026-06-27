@@ -1,0 +1,223 @@
+﻿# ============================================================
+#  Boom & Bust — Scripted Effects
+#
+#  Each bb_apply_* effect:
+#   1. Removes any currently-active modifier for that bar.
+#   2. Reads the bar value via scope:journal_entry and applies
+#      the modifier matching the current band.
+#
+#  Called from je_bb_financial's immediate and monthly pulse.
+#
+#  Band thresholds (0–100 scale):
+#   < 20  = band 1 (worst)
+#  < 40  = band 2
+#  < 60  = band 3 (mid)
+#  < 80  = band 4
+#  >= 80  = band 5 (best)
+# ============================================================
+
+
+# ── Bar 1: Financial Market Health ──────────────────────────
+
+bb_apply_market_health_modifier = {
+    if = {
+        limit = { has_modifier = bb_market_crashing }
+        remove_modifier = bb_market_crashing
+    }
+    if = {
+        limit = { has_modifier = bb_market_contracting }
+        remove_modifier = bb_market_contracting
+    }
+    if = {
+        limit = { has_modifier = bb_market_stable }
+        remove_modifier = bb_market_stable
+    }
+    if = {
+        limit = { has_modifier = bb_market_booming }
+        remove_modifier = bb_market_booming
+    }
+
+    if = {
+        limit = {
+            scope:journal_entry = {
+                "scripted_bar_progress(bb_market_health_bar)" < 20
+            }
+        }
+        add_modifier = { name = bb_market_crashing days = -1 }
+    }
+    else_if = {
+        limit = {
+            scope:journal_entry = {
+                "scripted_bar_progress(bb_market_health_bar)" < 40
+            }
+        }
+        add_modifier = { name = bb_market_contracting days = -1 }
+    }
+    else_if = {
+        limit = {
+            scope:journal_entry = {
+                "scripted_bar_progress(bb_market_health_bar)" < 60
+            }
+        }
+        add_modifier = { name = bb_market_stable days = -1 }
+    }
+    else_if = {
+        limit = {
+            scope:journal_entry = {
+                "scripted_bar_progress(bb_market_health_bar)" >= 80
+            }
+        }
+        add_modifier = { name = bb_market_booming days = -1 }
+    }
+    # 60–79 (Growing): no modifier — neutral baseline
+}
+
+
+# ── Bar 2: Financial Risk Stance ────────────────────────────
+
+bb_apply_risk_stance_modifier = {
+    if = {
+        limit = { has_modifier = bb_stance_pessimistic }
+        remove_modifier = bb_stance_pessimistic
+    }
+    if = {
+        limit = { has_modifier = bb_stance_cautious }
+        remove_modifier = bb_stance_cautious
+    }
+    if = {
+        limit = { has_modifier = bb_stance_tolerant }
+        remove_modifier = bb_stance_tolerant
+    }
+    if = {
+        limit = { has_modifier = bb_stance_optimistic }
+        remove_modifier = bb_stance_optimistic
+    }
+
+    if = {
+        limit = {
+            scope:journal_entry = {
+                "scripted_bar_progress(bb_risk_stance_bar)" < 20
+            }
+        }
+        add_modifier = { name = bb_stance_pessimistic days = -1 }
+    }
+    else_if = {
+        limit = {
+            scope:journal_entry = {
+                "scripted_bar_progress(bb_risk_stance_bar)" < 40
+            }
+        }
+        add_modifier = { name = bb_stance_cautious days = -1 }
+    }
+    else_if = {
+        limit = {
+            scope:journal_entry = {
+                "scripted_bar_progress(bb_risk_stance_bar)" < 60
+            }
+        }
+        add_modifier = { name = bb_stance_tolerant days = -1 }
+    }
+    else_if = {
+        limit = {
+            scope:journal_entry = {
+                "scripted_bar_progress(bb_risk_stance_bar)" < 80
+            }
+        }
+        add_modifier = { name = bb_stance_optimistic days = -1 }
+    }
+    # 80–100 (Audacious): no modifier — default investment climate
+}
+
+
+# ── Bar 3: Monopoly Power ───────────────────────────────────
+
+bb_apply_monopoly_modifier = {
+    if = {
+        limit = { has_modifier = bb_monopoly_present }
+        remove_modifier = bb_monopoly_present
+    }
+    if = {
+        limit = { has_modifier = bb_monopoly_influential }
+        remove_modifier = bb_monopoly_influential
+    }
+    if = {
+        limit = { has_modifier = bb_monopoly_dominant }
+        remove_modifier = bb_monopoly_dominant
+    }
+
+    if = {
+        limit = {
+            scope:journal_entry = {
+                "scripted_bar_progress(bb_monopoly_power_bar)" >= 80
+            }
+        }
+        add_modifier = { name = bb_monopoly_dominant days = -1 }
+    }
+    else_if = {
+        limit = {
+            scope:journal_entry = {
+                "scripted_bar_progress(bb_monopoly_power_bar)" >= 60
+            }
+        }
+        add_modifier = { name = bb_monopoly_influential days = -1 }
+    }
+    else_if = {
+        limit = {
+            scope:journal_entry = {
+                "scripted_bar_progress(bb_monopoly_power_bar)" >= 40
+            }
+        }
+        add_modifier = { name = bb_monopoly_present days = -1 }
+    }
+    # 0–39 (Non-existent / Trivial): no modifier
+}
+
+
+# ── Cleanup ──────────────────────────────────────────────────
+
+bb_remove_all_bb_modifiers = {
+    if = {
+        limit = { has_modifier = bb_market_crashing }
+        remove_modifier = bb_market_crashing
+    }
+    if = {
+        limit = { has_modifier = bb_market_contracting }
+        remove_modifier = bb_market_contracting
+    }
+    if = {
+        limit = { has_modifier = bb_market_stable }
+        remove_modifier = bb_market_stable
+    }
+    if = {
+        limit = { has_modifier = bb_market_booming }
+        remove_modifier = bb_market_booming
+    }
+    if = {
+        limit = { has_modifier = bb_stance_pessimistic }
+        remove_modifier = bb_stance_pessimistic
+    }
+    if = {
+        limit = { has_modifier = bb_stance_cautious }
+        remove_modifier = bb_stance_cautious
+    }
+    if = {
+        limit = { has_modifier = bb_stance_tolerant }
+        remove_modifier = bb_stance_tolerant
+    }
+    if = {
+        limit = { has_modifier = bb_stance_optimistic }
+        remove_modifier = bb_stance_optimistic
+    }
+    if = {
+        limit = { has_modifier = bb_monopoly_present }
+        remove_modifier = bb_monopoly_present
+    }
+    if = {
+        limit = { has_modifier = bb_monopoly_influential }
+        remove_modifier = bb_monopoly_influential
+    }
+    if = {
+        limit = { has_modifier = bb_monopoly_dominant }
+        remove_modifier = bb_monopoly_dominant
+    }
+}

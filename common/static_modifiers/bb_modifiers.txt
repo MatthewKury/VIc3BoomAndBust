@@ -1,0 +1,84 @@
+﻿# ============================================================
+#  Boom & Bust — Static Modifiers  (common/static_modifiers/)
+#
+#  All modifier keys below are confirmed valid in V3 1.13.
+#  state_* keys in a country modifier apply to every state.
+# ============================================================
+
+# ── Bar 1: Financial Market Health ──────────────────────────
+
+bb_market_crashing = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    building_throughput_add = -0.30
+}
+
+bb_market_contracting = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    building_throughput_add = -0.15
+}
+
+bb_market_stable = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    building_throughput_add = -0.05
+}
+
+# Growing (60-79): no modifier — represents the baseline/default state
+
+bb_market_booming = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_positive.dds
+    building_throughput_add = 0.05
+}
+
+# ── Bar 2: Financial Risk Stance ────────────────────────────
+# Audacious (80-100): no modifier — represents the default investment climate
+
+bb_stance_pessimistic = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    country_loan_interest_rate_add = 0.03
+    country_authority_add = 15
+    state_capitalists_investment_pool_contribution_add = -0.15
+}
+
+bb_stance_cautious = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    country_loan_interest_rate_add = 0.02
+    country_authority_add = 8
+    state_capitalists_investment_pool_contribution_add = -0.10
+}
+
+bb_stance_tolerant = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    country_loan_interest_rate_add = 0.01
+    state_capitalists_investment_pool_contribution_add = -0.05
+}
+
+bb_stance_optimistic = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_positive.dds
+    state_capitalists_investment_pool_contribution_add = -0.01
+}
+
+# ── Bar 3: Monopoly Power ───────────────────────────────────
+# Non-existent (0-19) and Trivial (20-39): no modifier
+
+bb_monopoly_present = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_positive.dds
+    building_throughput_add = 0.05
+    country_capitalists_pol_str_mult = 0.10
+    country_aristocrats_pol_str_mult = 0.05
+}
+
+bb_monopoly_influential = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    building_throughput_add = 0.10
+    country_capitalists_pol_str_mult = 0.30
+    country_aristocrats_pol_str_mult = 0.15
+    building_minimum_wage_mult = -0.05
+}
+
+bb_monopoly_dominant = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    building_throughput_add = 0.15
+    country_capitalists_pol_str_mult = 0.60
+    country_aristocrats_pol_str_mult = 0.30
+    building_minimum_wage_mult = -0.10
+}

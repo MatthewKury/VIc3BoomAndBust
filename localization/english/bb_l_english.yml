@@ -1,0 +1,52 @@
+﻿l_english:
+
+ # ── Journal Entry ─────────────────────────────────────────────────────────────
+ je_bb_financial: "Boom & Bust: Financial Monitor"
+ je_bb_financial_reason: "The nation's financial system requires attention."
+ je_bb_financial_desc: "Three forces shape the financial landscape of your nation. The health of the market determines industrial output. The risk appetite of investors governs private capital formation. The concentration of monopoly power shifts wealth and political influence toward the elite.\n\n§YFinancial Market Health§!\n  §RCrashing§! (0–19)  •  §rContracting§! (20–39)  •  Stable (40–59)  •  §gGrowing§! (60–79)  •  §GBooming§! (80–100)\n\n§YFinancial Risk Stance§!\n  §RPessimistic§! (0–19)  •  §rCautious§! (20–39)  •  Tolerant (40–59)  •  §gOptimistic§! (60–79)  •  §GAudacious§! (80–100)\n\n§YMonopoly Power§!\n  Non-existent (0–19)  •  Trivial (20–39)  •  §yPresent§! (40–59)  •  §rInfluential§! (60–79)  •  §RDominant§! (80–100)"
+
+ # ── Progress Bar Labels ───────────────────────────────────────────────────────
+ bb_market_health_bar: "Financial Market Health"
+ bb_market_health_bar_desc: "Crashing (0–19) • Contracting (20–39) • Stable (40–59) • Growing (60–79) • Booming (80–100)"
+
+ bb_risk_stance_bar: "Financial Risk Stance"
+ bb_risk_stance_bar_desc: "Pessimistic (0–19) • Cautious (20–39) • Tolerant (40–59) • Optimistic (60–79) • Audacious (80–100)"
+
+ bb_monopoly_power_bar: "Monopoly Power"
+ bb_monopoly_power_bar_desc: "Non-existent (0–19) • Trivial (20–39) • Present (40–59) • Influential (60–79) • Dominant (80–100)"
+
+ # ── Market Health Modifiers ───────────────────────────────────────────────────
+ bb_market_crashing: "Market Crash"
+ bb_market_crashing_desc: "Financial markets have collapsed. Businesses cannot secure credit or capital, dragging all industrial output down severely."
+
+ bb_market_contracting: "Contracting Markets"
+ bb_market_contracting_desc: "Financial markets are shrinking. Reduced capital availability suppresses industrial output across the economy."
+
+ bb_market_stable: "Sluggish Markets"
+ bb_market_stable_desc: "Markets are technically stable but uninspiring. Cautious capital allocation produces a mild drag on industrial output."
+
+ bb_market_booming: "Booming Markets"
+ bb_market_booming_desc: "Financial markets are surging. Abundant credit and investor confidence provide a modest boost to industrial output."
+
+ # ── Risk Stance Modifiers ─────────────────────────────────────────────────────
+ bb_stance_pessimistic: "Investor Pessimism"
+ bb_stance_pessimistic_desc: "Private investors have abandoned the market entirely. The state must drive economic growth, granting the government increased authority — but private investment has all but vanished and borrowing costs are punishing."
+
+ bb_stance_cautious: "Investor Caution"
+ bb_stance_cautious_desc: "Investors are pulling back sharply from private construction. The government steps in as the primary source of growth, gaining authority, while private capital formation and interest rate burdens remain elevated."
+
+ bb_stance_tolerant: "Cautious Investment"
+ bb_stance_tolerant_desc: "Investors are participating but reluctantly. Private investment is meaningfully below normal, and borrowing remains more expensive than the baseline."
+
+ bb_stance_optimistic: "Cautious Optimism"
+ bb_stance_optimistic_desc: "Investors are increasingly willing to deploy capital. Private investment is nearly back to normal levels."
+
+ # ── Monopoly Power Modifiers ──────────────────────────────────────────────────
+ bb_monopoly_present: "Emerging Monopolies"
+ bb_monopoly_present_desc: "Large firms are beginning to dominate certain sectors. Consolidated production brings modest efficiency gains while industrialists and landowners grow more politically assertive."
+
+ bb_monopoly_influential: "Influential Monopolies"
+ bb_monopoly_influential_desc: "Monopolistic firms exert significant control over the economy. Market consolidation produces real output gains, but workers see their wages squeezed as competition diminishes and industrial and landed elites grow powerful."
+
+ bb_monopoly_dominant: "Monopoly Dominance"
+ bb_monopoly_dominant_desc: "A handful of firms control vast swaths of the economy. Output benefits from extreme consolidation, but industrialists and landowners wield outsized political power and workers' wages are heavily suppressed."

@@ -1,10 +1,10 @@
 {
-  "name" : "LiteratureForThePeople",
+  "name" : "BoomAndBust",
 	"id" : "Vic3LiteratureForThePeople/MatthewKury/github.com",
   "version" : "0.1-a",
   "game_id": "victoria3",
-  "supported_game_version" : "1.12",
-  "short_description" : "Adds printing industry to the game to capture the emergence of the novel in to the common sphere.",
+  "supported_game_version" : "1.13",
+  "short_description" : "Adds a an only player facing journal entry that attempts to simulate the complications that arise from the dependence of a financial market",
   "tags" : ["gameplay"],
   "relationships" : [],
   "game_custom_data" : {
