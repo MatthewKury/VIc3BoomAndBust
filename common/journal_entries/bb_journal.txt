@@ -1,13 +1,10 @@
 ﻿# ============================================================
 #  Boom & Bust — Main Journal Entry
 #
-#  Activates for all countries (possible = always = yes) but
-#  only applies modifiers to the human player via is_local_player
-#  checks inside immediate and the monthly pulse effect.
-#
-#  This is necessary because is_local_player is not valid in
-#  the JE possible block — V3 evaluates possible in a context
-#  where that trigger is not available.
+#  possible = { hidden_trigger { always = yes } } auto-activates
+#  this JE for all countries on the first monthly pulse. Effects
+#  in immediate and on_monthly_pulse are gated with is_local_player
+#  so only the human player receives modifiers.
 #
 #  Hosts three scripted progress bars (defined in
 #  common/scripted_progress_bars/bb_progress_bars.txt).
@@ -18,18 +15,22 @@ je_bb_financial = {
 
     group = je_group_internal_affairs
 
+    weight = 100
+
+    is_shown_when_inactive = {
+        is_player = yes
+    }
+
     scripted_progress_bar = bb_market_health_bar
     scripted_progress_bar = bb_risk_stance_bar
     scripted_progress_bar = bb_monopoly_power_bar
 
-    # Activate for all countries so the JE engine sees it
     possible = {
-        always = yes
+        hidden_trigger = { always = yes }
     }
 
-    # Explicit: this JE never completes
     complete = {
-        always = no
+        hidden_trigger = { always = no }
     }
 
     # Apply starting modifiers only for the human player.
