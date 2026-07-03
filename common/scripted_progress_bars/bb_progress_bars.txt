@@ -39,4 +39,74 @@ bb_monopoly_power_bar = {
     start_value = 10
     min_value = 0
     max_value = 100
+
+    monthly_progress = {
+        # Base rate from economic system law
+        if = {
+            limit = { has_law = law_type:law_laissez_faire }
+            add = { desc = "bb_monopoly_tick_laissez_faire" value = 0.5 }
+        }
+        else_if = {
+            limit = { has_law = law_type:law_extraction_economy }
+            add = { desc = "bb_monopoly_tick_extraction" value = 0.35 }
+        }
+        else_if = {
+            limit = { has_law = law_type:law_traditionalism }
+            add = { desc = "bb_monopoly_tick_traditionalism" value = 0.3 }
+        }
+        else_if = {
+            limit = { has_law = law_type:law_interventionism }
+            add = { desc = "bb_monopoly_tick_interventionism" value = 0.2 }
+        }
+        else_if = {
+            limit = { has_law = law_type:law_agrarianism }
+            add = { desc = "bb_monopoly_tick_agrarianism" value = 0.15 }
+        }
+        else_if = {
+            limit = { has_law = law_type:law_industry_banned }
+            add = { desc = "bb_monopoly_tick_industry_banned" value = 0.05 }
+        }
+        else_if = {
+            limit = { has_law = law_type:law_cooperative_ownership }
+            add = { desc = "bb_monopoly_tick_cooperative" value = 0.05 }
+        }
+        else_if = {
+            limit = { has_law = law_type:law_command_economy }
+            add = { desc = "bb_monopoly_tick_command" value = -0.3 }
+        }
+
+        # Acceleration: higher bar position = faster change in either direction
+        if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_monopoly_power_bar)" >= 80
+                }
+            }
+            multiply = 2.5
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_monopoly_power_bar)" >= 60
+                }
+            }
+            multiply = 2.0
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_monopoly_power_bar)" >= 40
+                }
+            }
+            multiply = 1.5
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_monopoly_power_bar)" >= 20
+                }
+            }
+            multiply = 1.25
+        }
+    }
 }

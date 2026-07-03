@@ -7,13 +7,13 @@
 
  # ── Progress Bar Labels ───────────────────────────────────────────────────────
  bb_market_health_bar: "Financial Market Health"
- bb_market_health_bar_desc: "Crashing (0–19) • Contracting (20–39) • Stable (40–59) • Growing (60–79) • Booming (80–100)"
+ bb_market_health_bar_desc: ""
 
  bb_risk_stance_bar: "Financial Risk Stance"
- bb_risk_stance_bar_desc: "Pessimistic (0–19) • Cautious (20–39) • Tolerant (40–59) • Optimistic (60–79) • Audacious (80–100)"
+ bb_risk_stance_bar_desc: ""
 
  bb_monopoly_power_bar: "Monopoly Power"
- bb_monopoly_power_bar_desc: "Non-existent (0–19) • Trivial (20–39) • Present (40–59) • Influential (60–79) • Dominant (80–100)"
+ bb_monopoly_power_bar_desc: ""
 
  # ── Market Health Modifiers ───────────────────────────────────────────────────
  bb_market_crashing: "Market Crash"
@@ -50,3 +50,13 @@
 
  bb_monopoly_dominant: "Monopoly Dominance"
  bb_monopoly_dominant_desc: "A handful of firms control vast swaths of the economy. Output benefits from extreme consolidation, but industrialists and landowners wield outsized political power and workers' wages are heavily suppressed."
+
+ # ── Monopoly Bar Monthly Progress Tooltips ───────────────────────────────────
+ bb_monopoly_tick_laissez_faire: "Laissez-faire markets (unchecked)"
+ bb_monopoly_tick_extraction: "Extraction economy"
+ bb_monopoly_tick_traditionalism: "Traditionalist economy"
+ bb_monopoly_tick_interventionism: "Interventionist regulation"
+ bb_monopoly_tick_agrarianism: "Agrarian economy"
+ bb_monopoly_tick_industry_banned: "Industry banned"
+ bb_monopoly_tick_cooperative: "Cooperative ownership"
+ bb_monopoly_tick_command: "Command economy (breaking up monopolies)"
