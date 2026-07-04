@@ -112,3 +112,26 @@ bb_monopoly_dominant = {
     country_aristocrats_pol_str_mult = 0.30
     building_minimum_wage_mult = -0.20
 }
+
+# ── Antitrust & Dissolve Monopoly ───────────────────────────
+
+# Decaying authority drain while the antitrust case is being pressed.
+# Added with is_decaying = yes for 12 months by bb_dissolve_monopoly_decision.
+bb_antitrust_case_cost = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    country_authority_add = -15
+}
+
+# Marker: base dissolution case active (24 months).
+# Adds -1.0 to monthly_progress before the position multiplier.
+bb_monopoly_dissolution = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_positive.dds
+}
+
+# Marker: strong dissolution case active (24 months).
+# Triggered when champion has forceful/meticulous/innovative trait
+# OR Anticompetitive Legislation is enacted.
+# Adds -2.0 to monthly_progress before the position multiplier.
+bb_monopoly_dissolution_strong = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_positive.dds
+}

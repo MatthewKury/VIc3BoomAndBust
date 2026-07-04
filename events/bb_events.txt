@@ -1,1 +1,118 @@
-﻿
+﻿namespace = bb
+
+# ================================================================
+#  Boom & Bust — Events
+# ================================================================
+
+# ── bb.10: Dissolve Monopoly — Character Selection ──────────
+# Triggered by bb_dissolve_monopoly_decision.
+# Player selects a government IG leader to champion the case.
+# Each option gates on that IG being in government.
+# The fallback (civil service) is always available as a last resort.
+
+bb.10 = {
+    type = country_event
+    placement = ROOT
+    title = bb.10.t
+    desc  = bb.10.d
+    theme = law
+
+    option = {
+        name = bb.10.a
+        trigger = {
+            ig:ig_intelligentsia = { is_in_government = yes }
+        }
+        ig:ig_intelligentsia = {
+            leader = { save_scope_as = bb_case_leader }
+        }
+        bb_apply_dissolution_effect = yes
+        trigger_event = { id = bb.11 days = 14 }
+    }
+
+    option = {
+        name = bb.10.b
+        trigger = {
+            ig:ig_trade_unions = { is_in_government = yes }
+        }
+        ig:ig_trade_unions = {
+            leader = { save_scope_as = bb_case_leader }
+        }
+        bb_apply_dissolution_effect = yes
+        trigger_event = { id = bb.11 days = 14 }
+    }
+
+    option = {
+        name = bb.10.c
+        trigger = {
+            ig:ig_petty_bourgeoisie = { is_in_government = yes }
+        }
+        ig:ig_petty_bourgeoisie = {
+            leader = { save_scope_as = bb_case_leader }
+        }
+        bb_apply_dissolution_effect = yes
+        trigger_event = { id = bb.11 days = 14 }
+    }
+
+    option = {
+        name = bb.10.d
+        trigger = {
+            ig:ig_industrialists = { is_in_government = yes }
+        }
+        ig:ig_industrialists = {
+            leader = { save_scope_as = bb_case_leader }
+        }
+        bb_apply_dissolution_effect = yes
+        trigger_event = { id = bb.11 days = 14 }
+    }
+
+    # Fallback: no specific champion — civil service handles the case
+    option = {
+        name = bb.10.z
+        default_option = yes
+        add_modifier = {
+            name = bb_monopoly_dissolution
+            months = 24
+        }
+        every_scope_state = {
+            add_radicals = {
+                pop_type = pop_type:capitalists
+                value = medium_radicals
+            }
+            add_radicals = {
+                pop_type = pop_type:aristocrats
+                value = medium_radicals
+            }
+        }
+        trigger_event = { id = bb.11 days = 14 }
+    }
+}
+
+# ── bb.11: Dissolve Monopoly — Outcome Notification ─────────
+# Fires 14 days after the player makes their selection in bb.10.
+# Describes the outcome; clears the outcome flag variable.
+
+bb.11 = {
+    type = country_event
+    placement = ROOT
+    title = bb.11.t
+    theme = law
+
+    desc = {
+        triggered_desc = {
+            trigger = { has_variable = bb_dissolution_outcome_strong }
+            desc = bb.11.d.strong
+        }
+        triggered_desc = {
+            trigger = { NOT = { has_variable = bb_dissolution_outcome_strong } }
+            desc = bb.11.d.base
+        }
+    }
+
+    option = {
+        name = bb.11.a
+        if = {
+            limit = { has_variable = bb_dissolution_outcome_strong }
+            remove_variable = bb_dissolution_outcome_strong
+        }
+    }
+}

@@ -60,3 +60,52 @@
  bb_monopoly_tick_industry_banned: "Industry banned"
  bb_monopoly_tick_cooperative: "Cooperative ownership"
  bb_monopoly_tick_command: "Command economy (breaking up monopolies)"
+ bb_monopoly_dissolution_active: "Monopoly dissolution case (active)"
+ bb_monopoly_dissolution_strong_active: "Monopoly dissolution case (vigorous)"
+
+ # ── Antitrust Law Group ───────────────────────────────────────────────────────
+ lawgroup_bb_antitrust: "Antitrust Policy"
+ lawgroup_bb_antitrust_desc: "How the government regulates the concentration of market power."
+
+ law_bb_free_market: "Free Market"
+ law_bb_free_market_desc: "The government does not interfere with market consolidation. Monopolies form and dissolve according to natural competitive pressures."
+
+ law_bb_letters_of_patent: "Letters of Patent"
+ law_bb_letters_of_patent_desc: "The government issues exclusive charters granting monopoly rights to favoured firms. In exchange, patent-holders supply military goods at preferential rates (−10%) and subsidise construction inputs (−5%). Accelerates market concentration, and is incompatible with laissez-faire or collectivist economic systems."
+
+ law_bb_oversight_committees: "Oversight Committees"
+ law_bb_oversight_committees_desc: "Standing committees of experts monitor market concentration and can intervene before dominance becomes entrenched. Maintaining these bodies consumes significant bureaucratic capacity."
+
+ law_bb_anticompetitive_legislation: "Anticompetitive Legislation"
+ law_bb_anticompetitive_legislation_desc: "Formal statutes prohibit collusion, predatory pricing, and other practices that entrench monopoly power. The government's ability to break up existing monopolies is significantly enhanced."
+
+ # ── Dissolve Monopoly Decision ────────────────────────────────────────────────
+ bb_dissolve_monopoly_decision: "Dissolve Monopoly"
+ bb_dissolve_monopoly_decision_desc: "Launch a formal government case against the nation's entrenched monopolies. A champion must be chosen from the governing coalition to lead the inquiry. The political cost is steep, and the industrialists and landed elite will not accept this quietly."
+ bb_dissolve_monopoly_decision_tooltip: "Commission an antitrust case led by a government IG leader. Requires no active dissolution case to be running."
+
+ # ── Antitrust Case Cost Modifier ─────────────────────────────────────────────
+ bb_antitrust_case_cost: "Antitrust Proceedings"
+ bb_antitrust_case_cost_desc: "The government is pressing an active case against monopolistic firms. Sustaining political pressure on powerful interests drains authority."
+
+ # ── Dissolution Marker Modifiers ─────────────────────────────────────────────
+ bb_monopoly_dissolution: "Monopoly Dissolution (Active)"
+ bb_monopoly_dissolution_desc: "A formal case is dismantling entrenched monopolies, applying steady downward pressure on market concentration."
+
+ bb_monopoly_dissolution_strong: "Monopoly Dissolution (Vigorous)"
+ bb_monopoly_dissolution_strong_desc: "A forceful or well-resourced case is aggressively dismantling monopolistic structures, applying significant downward pressure on market concentration each month."
+
+ # ── bb.10: Character Selection Event ─────────────────────────────────────────
+ bb.10.t: "Launch an Antitrust Case"
+ bb.10.d: "The monopolies have grown powerful enough to warrant a formal government response. Select a member of the governing coalition to champion the case — their character will determine how effectively the inquiry proceeds and how fiercely the affected interests will resist."
+ bb.10.a: "Commission the Intelligentsia to lead the inquiry."
+ bb.10.b: "Commission the Trade Unions to lead the inquiry."
+ bb.10.c: "Commission the Petty Bourgeoisie to lead the inquiry."
+ bb.10.d: "Commission the Industrialists to lead the inquiry."
+ bb.10.z: "Let the civil service handle it without a political champion."
+
+ # ── bb.11: Outcome Notification Event ────────────────────────────────────────
+ bb.11.t: "Antitrust Case Filed"
+ bb.11.d.strong: "The government's case has been filed with unusual force. The chosen champion's reputation — combined with the weight of the law — has thrown the monopolists onto the defensive. Market concentration is being rolled back, though the industrialists and landowners are furious."
+ bb.11.d.base: "The government's antitrust case has been submitted. The inquiry will proceed steadily, applying gradual pressure on the most entrenched monopolistic interests. Affected capitalists and aristocrats have mobilised their supporters in response."
+ bb.11.a: "We proceed."

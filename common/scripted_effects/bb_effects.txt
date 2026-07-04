@@ -173,6 +173,75 @@ bb_apply_monopoly_modifier = {
 }
 
 
+# ── Bar 3: Dissolve Monopoly — Dissolution Effect ────────────
+# Scope: country. Requires scope:bb_case_leader = chosen character.
+# Called from bb.10 options (not the fallback).
+#
+# Determines dissolution strength from:
+#   - Character traits (forceful / meticulous / innovative → strong)
+#   - Presence of law_bb_anticompetitive_legislation → strong
+#   - Character trait charismatic → halves radicalism blowback
+#
+# Sets bb_dissolution_outcome_strong variable for bb.11 outcome text.
+
+bb_apply_dissolution_effect = {
+    if = {
+        limit = {
+            OR = {
+                scope:bb_case_leader = {
+                    OR = {
+                        has_trait = forceful
+                        has_trait = meticulous
+                        has_trait = innovative
+                    }
+                }
+                has_law = law_type:law_bb_anticompetitive_legislation
+            }
+        }
+        add_modifier = {
+            name = bb_monopoly_dissolution_strong
+            months = 24
+        }
+        set_variable = { name = bb_dissolution_outcome_strong value = yes }
+    }
+    else = {
+        add_modifier = {
+            name = bb_monopoly_dissolution
+            months = 24
+        }
+    }
+
+    # Charismatic leaders negotiate with capitalists, reducing blowback
+    if = {
+        limit = {
+            scope:bb_case_leader = { has_trait = charismatic }
+        }
+        every_scope_state = {
+            add_radicals = {
+                pop_type = pop_type:capitalists
+                value = small_radicals
+            }
+            add_radicals = {
+                pop_type = pop_type:aristocrats
+                value = small_radicals
+            }
+        }
+    }
+    else = {
+        every_scope_state = {
+            add_radicals = {
+                pop_type = pop_type:capitalists
+                value = medium_radicals
+            }
+            add_radicals = {
+                pop_type = pop_type:aristocrats
+                value = medium_radicals
+            }
+        }
+    }
+}
+
+
 # ── Cleanup ──────────────────────────────────────────────────
 
 bb_remove_all_bb_modifiers = {
