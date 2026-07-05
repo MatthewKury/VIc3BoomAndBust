@@ -122,16 +122,18 @@ bb_antitrust_case_cost = {
     country_authority_add = -15
 }
 
-# Marker: base dissolution case active (24 months).
-# Adds -1.0 to monthly_progress before the position multiplier.
+# Visible marker: a dissolution case is active (24 months).
+# The actual monthly bar reduction comes from the bb_case_strength
+# variable set in bb_apply_dissolution_effect, not from this modifier.
 bb_monopoly_dissolution = {
     icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_positive.dds
 }
 
-# Marker: strong dissolution case active (24 months).
-# Triggered when champion has forceful/meticulous/innovative trait
-# OR Anticompetitive Legislation is enacted.
-# Adds -2.0 to monthly_progress before the position multiplier.
-bb_monopoly_dissolution_strong = {
+# Applied to the champion's own interest group for 24 months when
+# Industrialists or Landowners lead the case — a conflicted champion
+# uses the inquiry to entrench their group's position.
+bb_case_conflicted_champion = {
     icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_positive.dds
+    interest_group_pol_str_mult = 0.20
+    interest_group_pop_attraction_mult = 0.10
 }

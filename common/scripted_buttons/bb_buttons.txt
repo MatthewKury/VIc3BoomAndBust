@@ -1,0 +1,70 @@
+﻿# ================================================================
+#  Boom & Bust — Journal Entry Scripted Buttons
+#
+#  bb_dissolve_monopoly_button (attached to je_bb_financial)
+#    Visible when the Monopoly Power bar reads >= 40 — checked
+#    directly on the bar, so there is no monthly-pulse lag.
+#    Greyed out (possible) while a dissolution case is running
+#    or no interest group is in government.
+#    Costs decaying authority over 12 months, then opens bb.10
+#    for IG-leader selection.
+#    ai_chance base 0: the JE is active for every country, so the
+#    AI must be explicitly barred from pressing the button.
+# ================================================================
+
+# ── Adjust Fiscal Temperature ───────────────────────────────────
+# Always visible on the JE. Opens bb.20, where the player picks one
+# of four stances that push the Risk Stance bar up or down monthly
+# for 5 years (stored in the timed variable bb_fiscal_temp, read by
+# bb_risk_stance_bar). The button stays greyed out while a stance
+# is in force; bb.21 notifies the player when it lapses.
+
+bb_fiscal_temperature_button = {
+    name = "bb_fiscal_temperature_button"
+    desc = "bb_fiscal_temperature_button_desc"
+
+    visible = { always = yes }
+
+    possible = {
+        NOT = { has_variable = bb_fiscal_temp }
+    }
+
+    ai_chance = {
+        value = 0
+    }
+
+    effect = {
+        trigger_event = { id = bb.20 popup = yes }
+    }
+}
+
+bb_dissolve_monopoly_button = {
+    name = "bb_dissolve_monopoly_button"
+    desc = "bb_dissolve_monopoly_button_desc"
+
+    visible = {
+        scope:journal_entry = {
+            "scripted_bar_progress(bb_monopoly_power_bar)" >= 40
+        }
+    }
+
+    possible = {
+        NOT = { has_variable = bb_case_strength }
+        any_interest_group = {
+            is_in_government = yes
+        }
+    }
+
+    ai_chance = {
+        value = 0
+    }
+
+    effect = {
+        add_modifier = {
+            name = bb_antitrust_case_cost
+            months = 12
+            is_decaying = yes
+        }
+        trigger_event = { id = bb.10 popup = yes }
+    }
+}

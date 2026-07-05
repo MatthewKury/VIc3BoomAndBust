@@ -25,6 +25,9 @@ je_bb_financial = {
     scripted_progress_bar = bb_risk_stance_bar
     scripted_progress_bar = bb_monopoly_power_bar
 
+    scripted_button = bb_fiscal_temperature_button
+    scripted_button = bb_dissolve_monopoly_button
+
     possible = {
         hidden_trigger = { always = yes }
     }

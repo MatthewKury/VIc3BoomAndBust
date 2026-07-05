@@ -1,0 +1,9 @@
+﻿# ================================================================
+#  Boom & Bust — Antitrust Law Group definition
+#  (law groups must live in common/law_groups/, not common/laws/)
+# ================================================================
+
+lawgroup_bb_antitrust = {
+	law_group_category = economy
+	base_enactment_days = 100
+}

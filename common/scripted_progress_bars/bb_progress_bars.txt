@@ -28,6 +28,120 @@ bb_risk_stance_bar = {
     start_value = 50
     min_value = 0
     max_value = 100
+
+    monthly_progress = {
+        # Adjust Fiscal Temperature stance (set by bb.20, 5 years).
+        # Clamped at the read site — never compare the variable in
+        # effect limits (see tooltip-evaluation note in bb_effects.txt).
+        if = {
+            limit = { has_variable = bb_fiscal_temp }
+            add = {
+                desc = "bb_fiscal_temp_active"
+                value = var:bb_fiscal_temp
+                min = -1
+                max = 1
+            }
+        }
+
+        # ── Character temperaments (traits classified in
+        #    bb_scripted_triggers.txt) ─────────────────────────────
+        # Ruler: very strong influence (±0.3)
+        if = {
+            limit = { ruler ?= { bb_char_heats_risk = yes } }
+            add = { desc = "bb_risk_ruler_heats" value = 0.3 }
+        }
+        if = {
+            limit = { ruler ?= { bb_char_cools_risk = yes } }
+            add = { desc = "bb_risk_ruler_cools" value = -0.3 }
+        }
+
+        # Government IG leaders: strong influence
+        # (±0.1 each, net clamped to ±0.3; the ruler is excluded
+        # so they are never counted twice)
+        if = {
+            limit = {
+                any_interest_group = {
+                    is_in_government = yes
+                    leader ?= {
+                        NOT = { is_ruler = yes }
+                        OR = {
+                            bb_char_heats_risk = yes
+                            bb_char_cools_risk = yes
+                        }
+                    }
+                }
+            }
+            add = {
+                desc = "bb_risk_gov_leaders"
+                value = 0
+                every_interest_group = {
+                    limit = {
+                        is_in_government = yes
+                        leader ?= {
+                            NOT = { is_ruler = yes }
+                            bb_char_heats_risk = yes
+                        }
+                    }
+                    add = 0.1
+                }
+                every_interest_group = {
+                    limit = {
+                        is_in_government = yes
+                        leader ?= {
+                            NOT = { is_ruler = yes }
+                            bb_char_cools_risk = yes
+                        }
+                    }
+                    add = -0.1
+                }
+                min = -0.3
+                max = 0.3
+            }
+        }
+
+        # Agitators and magnates: some influence
+        # (±0.05 each, net clamped to ±0.2)
+        if = {
+            limit = {
+                any_scope_character = {
+                    OR = {
+                        is_agitator = yes
+                        has_role_of_type = magnate
+                    }
+                    OR = {
+                        bb_char_heats_risk = yes
+                        bb_char_cools_risk = yes
+                    }
+                }
+            }
+            add = {
+                desc = "bb_risk_public_figures"
+                value = 0
+                every_scope_character = {
+                    limit = {
+                        OR = {
+                            is_agitator = yes
+                            has_role_of_type = magnate
+                        }
+                        bb_char_heats_risk = yes
+                    }
+                    add = 0.05
+                }
+                every_scope_character = {
+                    limit = {
+                        OR = {
+                            is_agitator = yes
+                            has_role_of_type = magnate
+                        }
+                        bb_char_cools_risk = yes
+                    }
+                    add = -0.05
+                }
+                min = -0.2
+                max = 0.2
+            }
+        }
+    }
 }
 
 bb_monopoly_power_bar = {
@@ -36,7 +150,7 @@ bb_monopoly_power_bar = {
 
     default_bad = yes
 
-    start_value = 10
+    start_value = 45
     min_value = 0
     max_value = 100
 
@@ -89,14 +203,18 @@ bb_monopoly_power_bar = {
             multiply = 0.8
         }
 
-        # Active dissolution case pushes the bar down each month
+        # Active dissolution case pushes the bar down each month.
+        # Strength (-0.25 to -3.0) is computed at case launch from the
+        # champion's IG, traits, ideology, and the antitrust law
+        # (see bb_apply_dissolution_effect).
         if = {
-            limit = { has_modifier = bb_monopoly_dissolution_strong }
-            add = { desc = "bb_monopoly_dissolution_strong_active" value = -2.0 }
-        }
-        else_if = {
-            limit = { has_modifier = bb_monopoly_dissolution }
-            add = { desc = "bb_monopoly_dissolution_active" value = -1.0 }
+            limit = { has_variable = bb_case_strength }
+            add = {
+                desc = "bb_monopoly_dissolution_active"
+                value = var:bb_case_strength
+                min = -3
+                max = -0.25
+            }
         }
 
         # Acceleration: higher bar position = faster change in either direction

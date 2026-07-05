@@ -1,0 +1,29 @@
+﻿# ================================================================
+#  Boom & Bust — Scripted Triggers
+#
+#  Character-scope trait classifiers for the Risk Stance bar.
+#  A character with traits from both sets contributes to both
+#  directions and nets out to zero — intentional.
+# ================================================================
+
+# Temperaments that embolden investors (push Risk Stance up)
+bb_char_heats_risk = {
+    OR = {
+        has_trait = reckless
+        has_trait = ambitious
+        has_trait = romantic
+        has_trait = hedonist
+        has_trait = grifter
+    }
+}
+
+# Temperaments that counsel restraint (push Risk Stance down)
+bb_char_cools_risk = {
+    OR = {
+        has_trait = cautious
+        has_trait = meticulous
+        has_trait = reserved
+        has_trait = pious
+        has_trait = erudite
+    }
+}

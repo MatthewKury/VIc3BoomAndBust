@@ -14,8 +14,15 @@ bb.10 = {
     type = country_event
     placement = ROOT
     title = bb.10.t
-    desc  = bb.10.d
-    theme = law
+    desc  = bb.10.desc
+
+    duration = 3
+
+    event_image = {
+        video = "europenorthamerica_capitalists_meeting"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
 
     option = {
         name = bb.10.a
@@ -23,6 +30,7 @@ bb.10 = {
             ig:ig_intelligentsia = { is_in_government = yes }
         }
         ig:ig_intelligentsia = {
+            save_scope_as = bb_case_ig
             leader = { save_scope_as = bb_case_leader }
         }
         bb_apply_dissolution_effect = yes
@@ -35,6 +43,7 @@ bb.10 = {
             ig:ig_trade_unions = { is_in_government = yes }
         }
         ig:ig_trade_unions = {
+            save_scope_as = bb_case_ig
             leader = { save_scope_as = bb_case_leader }
         }
         bb_apply_dissolution_effect = yes
@@ -47,6 +56,7 @@ bb.10 = {
             ig:ig_petty_bourgeoisie = { is_in_government = yes }
         }
         ig:ig_petty_bourgeoisie = {
+            save_scope_as = bb_case_ig
             leader = { save_scope_as = bb_case_leader }
         }
         bb_apply_dissolution_effect = yes
@@ -59,6 +69,59 @@ bb.10 = {
             ig:ig_industrialists = { is_in_government = yes }
         }
         ig:ig_industrialists = {
+            save_scope_as = bb_case_ig
+            leader = { save_scope_as = bb_case_leader }
+        }
+        bb_apply_dissolution_effect = yes
+        trigger_event = { id = bb.11 days = 14 }
+    }
+
+    option = {
+        name = bb.10.e
+        trigger = {
+            ig:ig_landowners = { is_in_government = yes }
+        }
+        ig:ig_landowners = {
+            save_scope_as = bb_case_ig
+            leader = { save_scope_as = bb_case_leader }
+        }
+        bb_apply_dissolution_effect = yes
+        trigger_event = { id = bb.11 days = 14 }
+    }
+
+    option = {
+        name = bb.10.f
+        trigger = {
+            ig:ig_devout = { is_in_government = yes }
+        }
+        ig:ig_devout = {
+            save_scope_as = bb_case_ig
+            leader = { save_scope_as = bb_case_leader }
+        }
+        bb_apply_dissolution_effect = yes
+        trigger_event = { id = bb.11 days = 14 }
+    }
+
+    option = {
+        name = bb.10.g
+        trigger = {
+            ig:ig_armed_forces = { is_in_government = yes }
+        }
+        ig:ig_armed_forces = {
+            save_scope_as = bb_case_ig
+            leader = { save_scope_as = bb_case_leader }
+        }
+        bb_apply_dissolution_effect = yes
+        trigger_event = { id = bb.11 days = 14 }
+    }
+
+    option = {
+        name = bb.10.h
+        trigger = {
+            ig:ig_rural_folk = { is_in_government = yes }
+        }
+        ig:ig_rural_folk = {
+            save_scope_as = bb_case_ig
             leader = { save_scope_as = bb_case_leader }
         }
         bb_apply_dissolution_effect = yes
@@ -66,24 +129,122 @@ bb.10 = {
     }
 
     # Fallback: no specific champion — civil service handles the case
+    # at standard strength with no trait/ideology scaling.
     option = {
         name = bb.10.z
         default_option = yes
+        set_variable = {
+            name = bb_case_strength
+            value = -1
+            months = 24
+        }
         add_modifier = {
             name = bb_monopoly_dissolution
             months = 24
         }
-        every_scope_state = {
-            add_radicals = {
-                pop_type = pop_type:capitalists
-                value = medium_radicals
-            }
-            add_radicals = {
-                pop_type = pop_type:aristocrats
-                value = medium_radicals
-            }
+        add_radicals = {
+            value = medium_radicals
+            pop_type = capitalists
+        }
+        add_radicals = {
+            value = medium_radicals
+            pop_type = aristocrats
         }
         trigger_event = { id = bb.11 days = 14 }
+    }
+}
+
+# ── bb.20: Adjust Fiscal Temperature — Stance Selection ─────
+# Triggered by bb_fiscal_temperature_button.
+# Each option sets bb_fiscal_temp (monthly Risk Stance bar delta)
+# for 60 months and schedules the bb.21 expiry notice in 5 years.
+# The button is greyed out while bb_fiscal_temp exists.
+
+bb.20 = {
+    type = country_event
+    placement = ROOT
+    title = bb.20.t
+    desc  = bb.20.desc
+
+    duration = 3
+
+    event_image = {
+        video = "unspecific_politicians_arguing"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    # Strong heating: flood the market with cheap credit
+    option = {
+        name = bb.20.a
+        custom_tooltip = bb.20.a.tt
+        set_variable = {
+            name = bb_fiscal_temp
+            value = 1
+            months = 60
+        }
+        trigger_event = { id = bb.21 years = 5 }
+    }
+
+    # Mild heating: encourage speculative lending
+    option = {
+        name = bb.20.b
+        custom_tooltip = bb.20.b.tt
+        set_variable = {
+            name = bb_fiscal_temp
+            value = 0.5
+            months = 60
+        }
+        trigger_event = { id = bb.21 years = 5 }
+    }
+
+    # Mild cooling: tighten lending standards
+    option = {
+        name = bb.20.c
+        custom_tooltip = bb.20.c.tt
+        set_variable = {
+            name = bb_fiscal_temp
+            value = -0.5
+            months = 60
+        }
+        trigger_event = { id = bb.21 years = 5 }
+    }
+
+    # Strong cooling: impose strict capital discipline
+    option = {
+        name = bb.20.d
+        default_option = yes
+        custom_tooltip = bb.20.d.tt
+        set_variable = {
+            name = bb_fiscal_temp
+            value = -1
+            months = 60
+        }
+        trigger_event = { id = bb.21 years = 5 }
+    }
+}
+
+# ── bb.21: Fiscal Temperature — Expiry Notification ─────────
+# Fires 5 years after bb.20. The bb_fiscal_temp variable expires
+# on its own (months = 60); this event only informs the player
+# that the stance has lapsed and the button is available again.
+
+bb.21 = {
+    type = country_event
+    placement = ROOT
+    title = bb.21.t
+    desc  = bb.21.desc
+
+    duration = 3
+
+    event_image = {
+        video = "unspecific_signed_contract"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    option = {
+        name = bb.21.a
     }
 }
 
@@ -95,24 +256,39 @@ bb.11 = {
     type = country_event
     placement = ROOT
     title = bb.11.t
-    theme = law
+
+    duration = 3
+
+    event_image = {
+        video = "unspecific_signed_contract"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
 
     desc = {
-        triggered_desc = {
-            trigger = { has_variable = bb_dissolution_outcome_strong }
-            desc = bb.11.d.strong
-        }
-        triggered_desc = {
-            trigger = { NOT = { has_variable = bb_dissolution_outcome_strong } }
-            desc = bb.11.d.base
+        first_valid = {
+            triggered_desc = {
+                trigger = {
+                    has_variable = bb_case_strength
+                    var:bb_case_strength <= -1.75
+                }
+                desc = bb.11.d.strong
+            }
+            triggered_desc = {
+                trigger = {
+                    has_variable = bb_case_strength
+                    var:bb_case_strength >= -0.75
+                }
+                desc = bb.11.d.weak
+            }
+            triggered_desc = {
+                trigger = { always = yes }
+                desc = bb.11.d.base
+            }
         }
     }
 
     option = {
         name = bb.11.a
-        if = {
-            limit = { has_variable = bb_dissolution_outcome_strong }
-            remove_variable = bb_dissolution_outcome_strong
-        }
     }
 }
