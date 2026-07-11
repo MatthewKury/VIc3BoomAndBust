@@ -248,6 +248,231 @@ bb.21 = {
     }
 }
 
+# ── bb.30: Mania on the Exchange (major, market health >= 65) ─
+# Rolled by bb_roll_market_event (~8%/month, 12-month cooldown).
+# Speculative fever at the top of a boom: ride it or deflate it.
+# Extra options unlock when Industrialists or Landowners sit in
+# government. Immediate jolts use bb_market_jolt; long trends use
+# the timed bb_market_trend variable read by the health bar.
+
+bb.30 = {
+    type = country_event
+    placement = ROOT
+    title = bb.30.t
+    desc  = bb.30.desc
+
+    duration = 3
+
+    event_image = {
+        video = "europenorthamerica_capitalists_meeting"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    # Ride the boom: surge now, harsh correction builds
+    option = {
+        name = bb.30.a
+        custom_tooltip = bb.30.a.tt
+        bb_market_jolt = { VALUE = 4 }
+        set_variable = { name = bb_market_trend value = -0.6 months = 12 }
+    }
+
+    # Deflate the bubble: painful now, sounder later
+    option = {
+        name = bb.30.b
+        default_option = yes
+        custom_tooltip = bb.30.b.tt
+        bb_market_jolt = { VALUE = -3 }
+        set_variable = { name = bb_market_trend value = 0.4 months = 12 }
+        add_radicals = {
+            value = small_radicals
+            pop_type = capitalists
+        }
+    }
+
+    # Industrialists in government: channel the fever into industry
+    option = {
+        name = bb.30.c
+        trigger = {
+            ig:ig_industrialists = { is_in_government = yes }
+        }
+        custom_tooltip = bb.30.c.tt
+        bb_market_jolt = { VALUE = 2 }
+        set_variable = { name = bb_market_trend value = -0.2 months = 12 }
+        add_loyalists = {
+            value = small_radicals
+            pop_type = capitalists
+        }
+    }
+
+    # Landowners in government: rein in the speculating parvenus
+    option = {
+        name = bb.30.d
+        trigger = {
+            ig:ig_landowners = { is_in_government = yes }
+        }
+        custom_tooltip = bb.30.d.tt
+        bb_market_jolt = { VALUE = -2 }
+        set_variable = { name = bb_market_trend value = 0.2 months = 12 }
+        add_loyalists = {
+            value = small_radicals
+            pop_type = aristocrats
+        }
+        add_radicals = {
+            value = small_radicals
+            pop_type = capitalists
+        }
+    }
+}
+
+# ── bb.31: Panic! (major, market health < 40) ────────────────
+# A run on the banks at the bottom of a slump. Bail out, let it
+# burn, or take an IG-flavored middle road (Trade Unions /
+# Landowners in government).
+
+bb.31 = {
+    type = country_event
+    placement = ROOT
+    title = bb.31.t
+    desc  = bb.31.desc
+
+    duration = 3
+
+    event_image = {
+        video = "unspecific_politicians_arguing"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    # Guarantee the deposits: stability bought on credit
+    option = {
+        name = bb.31.a
+        custom_tooltip = bb.31.a.tt
+        bb_market_jolt = { VALUE = 2 }
+        set_variable = { name = bb_market_trend value = 0.5 months = 12 }
+        add_modifier = {
+            name = bb_bailout_burden
+            months = 24
+        }
+    }
+
+    # Let the weak banks fail: deep pain, strong recovery
+    option = {
+        name = bb.31.b
+        default_option = yes
+        custom_tooltip = bb.31.b.tt
+        bb_market_jolt = { VALUE = -4 }
+        set_variable = { name = bb_market_trend value = 0.7 months = 12 }
+        add_radicals = {
+            value = medium_radicals
+            strata = middle
+        }
+    }
+
+    # Trade Unions in government: shield depositors, punish financiers
+    option = {
+        name = bb.31.c
+        trigger = {
+            ig:ig_trade_unions = { is_in_government = yes }
+        }
+        custom_tooltip = bb.31.c.tt
+        bb_market_jolt = { VALUE = -1 }
+        set_variable = { name = bb_market_trend value = 0.4 months = 12 }
+        add_loyalists = {
+            value = small_radicals
+            strata = lower
+        }
+        add_radicals = {
+            value = small_radicals
+            pop_type = capitalists
+        }
+    }
+
+    # Landowners in government: return to hard money
+    option = {
+        name = bb.31.d
+        trigger = {
+            ig:ig_landowners = { is_in_government = yes }
+        }
+        custom_tooltip = bb.31.d.tt
+        bb_market_jolt = { VALUE = -2 }
+        set_variable = { name = bb_market_trend value = 0.3 months = 18 }
+        add_loyalists = {
+            value = small_radicals
+            pop_type = aristocrats
+        }
+    }
+}
+
+# ── bb.32: Foreign Capital Comes Calling (major, health 40–64) ─
+# A consortium of foreign financiers offers to underwrite the
+# nation's markets. Extra options with Petty Bourgeoisie or
+# Intelligentsia in government.
+
+bb.32 = {
+    type = country_event
+    placement = ROOT
+    title = bb.32.t
+    desc  = bb.32.desc
+
+    duration = 3
+
+    event_image = {
+        video = "unspecific_signed_contract"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    # Welcome the foreign investors
+    option = {
+        name = bb.32.a
+        custom_tooltip = bb.32.a.tt
+        bb_market_jolt = { VALUE = 2 }
+        set_variable = { name = bb_market_trend value = 0.4 months = 10 }
+        add_radicals = {
+            value = small_radicals
+            strata = middle
+        }
+    }
+
+    # Politely decline
+    option = {
+        name = bb.32.b
+        default_option = yes
+        custom_tooltip = bb.32.b.tt
+        add_loyalists = {
+            value = small_radicals
+            strata = middle
+        }
+    }
+
+    # Petty Bourgeoisie in government: domestic-ownership requirements
+    option = {
+        name = bb.32.c
+        trigger = {
+            ig:ig_petty_bourgeoisie = { is_in_government = yes }
+        }
+        custom_tooltip = bb.32.c.tt
+        bb_market_jolt = { VALUE = -1 }
+        set_variable = { name = bb_market_trend value = 0.25 months = 12 }
+        add_loyalists = {
+            value = small_radicals
+            pop_type = shopkeepers
+        }
+    }
+
+    # Intelligentsia in government: demand expertise alongside capital
+    option = {
+        name = bb.32.d
+        trigger = {
+            ig:ig_intelligentsia = { is_in_government = yes }
+        }
+        custom_tooltip = bb.32.d.tt
+        bb_market_jolt = { VALUE = 1 }
+        set_variable = { name = bb_market_trend value = 0.5 months = 10 }
+    }
+}
+
 # ── bb.11: Dissolve Monopoly — Outcome Notification ─────────
 # Fires 14 days after the player makes their selection in bb.10.
 # Describes the outcome; clears the outcome flag variable.

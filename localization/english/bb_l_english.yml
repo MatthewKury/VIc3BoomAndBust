@@ -136,6 +136,94 @@
  bb.10.h: "Commission the Rural Folk to lead the inquiry."
  bb.10.z: "Let the civil service handle it without a political champion."
 
+ # ── Market Health Bar Monthly Progress Tooltips ──────────────────────────────
+ # NOTE: embedded in PROGRESS_BAR_BREAKDOWN — no apostrophes allowed here.
+ bb_health_market_events: "Market news of the month"
+ bb_health_trend: "Underlying market trend"
+ bb_health_floor_pessimistic: "Pessimistic investors hold almost no exposure (floor)"
+ bb_health_floor_cautious: "Cautious investors limit their exposure (floor)"
+
+ # ── Newsfeed: Minor Market Events ─────────────────────────────────────────────
+ notification_bb_news_earnings_name: "Strong Earnings Season"
+ notification_bb_news_earnings_desc: "The great firms report handsome profits, and the exchanges respond warmly."
+ notification_bb_news_earnings_tooltip: "#header $notification_bb_news_earnings_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_earnings_desc$\n\nFinancial #b Market Health#! rises this month. The gain is larger the bolder the nation's #b Risk Stance#!."
+
+ notification_bb_news_flotation_name: "Triumphant Share Flotation"
+ notification_bb_news_flotation_desc: "A new joint-stock venture is oversubscribed within hours of opening its books."
+ notification_bb_news_flotation_tooltip: "#header $notification_bb_news_flotation_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_flotation_desc$\n\nFinancial #b Market Health#! rises sharply this month. The gain is larger the bolder the nation's #b Risk Stance#!."
+
+ notification_bb_news_foreign_capital_name: "Foreign Capital Trickles In"
+ notification_bb_news_foreign_capital_desc: "Overseas financiers are quietly taking positions in our markets. Observers expect the inflow to continue for some months."
+ notification_bb_news_foreign_capital_tooltip: "#header $notification_bb_news_foreign_capital_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_foreign_capital_desc$\n\nFinancial #b Market Health#! rises, and an #b upward trend#! will lift the market for several months."
+
+ notification_bb_news_credit_expansion_name: "Credit Flows Freely"
+ notification_bb_news_credit_expansion_desc: "Lenders are extending credit on remarkably generous terms. The exchanges cheer — though sober voices warn that today's easy money will be tomorrow's reckoning."
+ notification_bb_news_credit_expansion_tooltip: "#header $notification_bb_news_credit_expansion_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_credit_expansion_desc$\n\nFinancial #b Market Health#! rises sharply now, but a #b downward trend#! will weigh on the market for months to come."
+
+ notification_bb_news_confidence_name: "Confidence Builds"
+ notification_bb_news_confidence_desc: "Little has changed on the exchanges themselves, but merchants and financiers alike speak of brighter months ahead."
+ notification_bb_news_confidence_tooltip: "#header $notification_bb_news_confidence_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_confidence_desc$\n\nA modest gain now, and an #b upward trend#! will lift Financial #b Market Health#! for several months."
+
+ notification_bb_news_bank_failure_name: "Provincial Bank Fails"
+ notification_bb_news_bank_failure_desc: "A regional lender has shuttered its doors, and depositors crowd the street outside demanding their savings."
+ notification_bb_news_bank_failure_tooltip: "#header $notification_bb_news_bank_failure_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_bank_failure_desc$\n\nFinancial #b Market Health#! falls sharply this month. The loss is far larger the bolder the nation's #b Risk Stance#!."
+
+ notification_bb_news_commodity_glut_name: "Commodity Glut"
+ notification_bb_news_commodity_glut_desc: "Warehouses overflow and prices sag as key goods find no buyers."
+ notification_bb_news_commodity_glut_tooltip: "#header $notification_bb_news_commodity_glut_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_commodity_glut_desc$\n\nFinancial #b Market Health#! falls this month. The loss is far larger the bolder the nation's #b Risk Stance#!."
+
+ notification_bb_news_fraud_scandal_name: "Fraud at a Great House"
+ notification_bb_news_fraud_scandal_desc: "A celebrated financier stands exposed as a swindler. Confidence in the exchanges is shaken, and the whispers will not soon die down."
+ notification_bb_news_fraud_scandal_tooltip: "#header $notification_bb_news_fraud_scandal_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_fraud_scandal_desc$\n\nFinancial #b Market Health#! falls now, and a #b downward trend#! will weigh on the market for months."
+
+ notification_bb_news_foreign_wobble_name: "Tremors in Foreign Markets"
+ notification_bb_news_foreign_wobble_desc: "Unsettling news from exchanges abroad has made our own investors briefly hesitant."
+ notification_bb_news_foreign_wobble_tooltip: "#header $notification_bb_news_foreign_wobble_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_foreign_wobble_desc$\n\nFinancial #b Market Health#! dips this month. The loss is larger the bolder the nation's #b Risk Stance#!."
+
+ notification_bb_news_credit_tightening_name: "Lenders Tighten Their Books"
+ notification_bb_news_credit_tightening_desc: "Credit has grown dear and speculative ventures are being called in. Painful — but the survivors will stand on firmer ground."
+ notification_bb_news_credit_tightening_tooltip: "#header $notification_bb_news_credit_tightening_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_credit_tightening_desc$\n\nFinancial #b Market Health#! falls now, but an #b upward trend#! will support the market for months to come."
+
+ # ── Bailout Burden Modifier ───────────────────────────────────────────────────
+ bb_bailout_burden: "Bailout Burden"
+ bb_bailout_burden_desc: "The treasury borrowed heavily to guarantee bank deposits during the panic. Servicing that debt keeps the state's borrowing costs elevated."
+
+ # ── bb.30: Mania on the Exchange ──────────────────────────────────────────────
+ bb.30.t: "Mania on the Exchange"
+ bb.30.desc: "A speculative fever has gripped the exchanges. Clerks mortgage their salaries to buy shares, respectable matrons trade tips at the opera, and every week a new venture is floated to feverish applause. The nation's financiers insist this time is different. The government must decide whether to let the mania run its course — or take away the punch bowl."
+ bb.30.a: "Let the good times roll."
+ bb.30.a.tt: "Financial #b Market Health#! surges #b now#!, but a #b strong downward trend#! will drag the market for the next #b 12 months#! as the mania unwinds."
+ bb.30.b: "Deflate the bubble before it bursts on its own."
+ bb.30.b.tt: "Financial #b Market Health#! drops #b now#!, but a #b steady upward trend#! will support the market for #b 12 months#!. Capitalists are furious at the lost paper fortunes."
+ bb.30.c: "Channel the fever into productive industry."
+ bb.30.c.tt: "The Industrialists steer speculation toward real factories. #b Market Health#! rises now with only a #b mild downward trend#! to follow, and capitalists are pleased."
+ bb.30.d: "Rein in these speculating parvenus."
+ bb.30.d.tt: "The Landowners impose old-fashioned restraint. #b Market Health#! dips now but gains a #b mild upward trend#!. The aristocracy approves; the capitalists do not."
+
+ # ── bb.31: Panic! ─────────────────────────────────────────────────────────────
+ bb.31.t: "Panic!"
+ bb.31.desc: "It began with a rumour, as it always does. By noon the street outside the banks was impassable, and by nightfall respectable institutions were paying out savings in worthless scrip. The panic now feeds upon itself. The government must choose who is to be saved — and who is to be sacrificed."
+ bb.31.a: "The treasury will guarantee every deposit."
+ bb.31.a.tt: "Financial #b Market Health#! steadies #b now#! and gains a #b strong upward trend#! for #b 12 months#! — but the treasury must borrow heavily, raising the nation's #b loan interest#! for #b 24 months#!."
+ bb.31.b: "Let the weak banks fail."
+ bb.31.b.tt: "Financial #b Market Health#! plunges #b now#!, but the purge clears the rot: a #b very strong upward trend#! follows for #b 12 months#!. The ruined middle classes will not forgive quickly."
+ bb.31.c: "Shield the small depositor. Punish the financier."
+ bb.31.c.tt: "The Trade Unions demand justice. #b Market Health#! slips a little now but gains a #b solid upward trend#!. Workers are grateful; capitalists seethe."
+ bb.31.d: "Return to hard money and sound banking."
+ bb.31.d.tt: "The Landowners restore gold-backed discipline. #b Market Health#! dips now, but a #b long, steady upward trend#! follows for #b 18 months#!. The aristocracy approves."
+
+ # ── bb.32: Foreign Capital Comes Calling ──────────────────────────────────────
+ bb.32.t: "Foreign Capital Comes Calling"
+ bb.32.desc: "A consortium of foreign financiers has arrived in the capital with letters of introduction and very deep pockets. They propose to underwrite our markets on a grand scale. Their money is real enough — but money from abroad always arrives with strings attached, and the shopkeepers already mutter about foreign masters."
+ bb.32.a: "Welcome them with open arms."
+ bb.32.a.tt: "Financial #b Market Health#! rises #b now#! and gains an #b upward trend#! for #b 10 months#!. The middle classes resent the foreign presence."
+ bb.32.b: "Politely decline."
+ bb.32.b.tt: "No change to the markets. The middle classes appreciate the government standing up for domestic interests."
+ bb.32.c: "Accept — under strict domestic-ownership requirements."
+ bb.32.c.tt: "The Petty Bourgeoisie writes the terms. #b Market Health#! dips slightly now but gains a #b modest upward trend#! for #b 12 months#!, and the shopkeepers are pleased."
+ bb.32.d: "Demand their expertise alongside their capital."
+ bb.32.d.tt: "The Intelligentsia negotiates for knowledge as well as money. #b Market Health#! rises now and gains a #b strong upward trend#! for #b 10 months#!."
+
  # ── bb.11: Outcome Notification Event ────────────────────────────────────────
  bb.11.t: "Antitrust Case Filed"
  bb.11.d.strong: "The government's case has been filed with unusual force. The chosen champion's zeal — combined with the weight of the law — has thrown the monopolists onto the defensive. Market concentration is being rolled back rapidly, though the affected interests are furious."

@@ -1,9 +1,9 @@
 ﻿# ============================================================
 #  Boom & Bust — Scripted Progress Bars
 #
-#  All three bars start static (no monthly_progress).
-#  Values change only through events/decisions — to be
-#  implemented in the next phase.
+#  Market Health moves via monthly event shocks and trends
+#  (bb_roll_market_event), Risk Stance via fiscal policy and
+#  character temperaments, Monopoly Power via economic laws.
 #
 #  Bar ranges: 0–100 with five bands of 20 each.
 # ============================================================
@@ -17,6 +17,62 @@ bb_market_health_bar = {
     start_value = 50
     min_value = 0
     max_value = 100
+
+    monthly_progress = {
+        # This month's market event, rolled by bb_roll_market_event
+        # on the JE monthly pulse (player only) and scaled there by
+        # the Risk Stance bar. Overwritten every roll, so it is
+        # applied exactly once per month.
+        if = {
+            limit = { has_variable = bb_health_shock }
+            add = {
+                desc = "bb_health_market_events"
+                value = var:bb_health_shock
+                min = -10
+                max = 10
+            }
+        }
+
+        # Underlying trend planted by market events — a lasting
+        # monthly drift that tells the player where the market is
+        # headed before it gets there.
+        if = {
+            limit = { has_variable = bb_market_trend }
+            add = {
+                desc = "bb_health_trend"
+                value = var:bb_market_trend
+                min = -1.5
+                max = 1.5
+            }
+        }
+
+        # Conservative floors: pessimistic or cautious investors
+        # hold so little exposure that the market cannot collapse
+        # under them. bb_roll_market_event also voids losing rolls
+        # below these levels; this cushion pulls the bar back up.
+        # Gated on bb_health_shock so AI countries (which never
+        # roll events) are unaffected.
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_risk_stance_bar)" < 20
+                    "scripted_bar_progress(bb_market_health_bar)" < 35
+                }
+            }
+            add = { desc = "bb_health_floor_pessimistic" value = 1 }
+        }
+        else_if = {
+            limit = {
+                has_variable = bb_health_shock
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_risk_stance_bar)" < 40
+                    "scripted_bar_progress(bb_market_health_bar)" < 20
+                }
+            }
+            add = { desc = "bb_health_floor_cautious" value = 0.6 }
+        }
+    }
 }
 
 bb_risk_stance_bar = {

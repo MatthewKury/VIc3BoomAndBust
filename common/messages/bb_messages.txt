@@ -1,0 +1,82 @@
+﻿# ============================================================
+#  Boom & Bust — Newsfeed Messages  (common/messages/)
+#
+#  Feed notifications for the minor monthly market events
+#  rolled by bb_roll_market_event. Localization keys follow
+#  the vanilla pattern:
+#    notification_<key>_name / _desc / _tooltip
+# ============================================================
+
+# ── Good news ────────────────────────────────────────────────
+
+bb_news_earnings = {
+    type = country
+    texture = "gfx/interface/icons/notification_icons/goods.dds"
+    notification_type = feed
+    days = 28
+}
+
+bb_news_flotation = {
+    type = country
+    texture = "gfx/interface/icons/notification_icons/buildings.dds"
+    notification_type = feed
+    days = 28
+}
+
+bb_news_foreign_capital = {
+    type = country
+    texture = "gfx/interface/icons/notification_icons/trade_route.dds"
+    notification_type = feed
+    days = 28
+}
+
+bb_news_credit_expansion = {
+    type = country
+    texture = "gfx/interface/icons/notification_icons/influence.dds"
+    notification_type = feed
+    days = 28
+}
+
+bb_news_confidence = {
+    type = country
+    texture = "gfx/interface/icons/notification_icons/rank_up.dds"
+    notification_type = feed
+    days = 28
+}
+
+# ── Bad news ─────────────────────────────────────────────────
+
+bb_news_bank_failure = {
+    type = country
+    texture = "gfx/interface/icons/notification_icons/influence_bad.dds"
+    notification_type = feed
+    days = 28
+}
+
+bb_news_commodity_glut = {
+    type = country
+    texture = "gfx/interface/icons/notification_icons/resource.dds"
+    notification_type = feed
+    days = 28
+}
+
+bb_news_fraud_scandal = {
+    type = country
+    texture = "gfx/interface/icons/notification_icons/default.dds"
+    notification_type = feed
+    days = 28
+}
+
+bb_news_foreign_wobble = {
+    type = country
+    texture = "gfx/interface/icons/notification_icons/trade_route.dds"
+    notification_type = feed
+    days = 28
+}
+
+bb_news_credit_tightening = {
+    type = country
+    texture = "gfx/interface/icons/notification_icons/authority.dds"
+    notification_type = feed
+    days = 28
+}

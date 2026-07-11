@@ -129,6 +129,13 @@ bb_monopoly_dissolution = {
     icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_positive.dds
 }
 
+# The treasury borrows heavily to guarantee bank deposits during
+# a panic (bb.31 option a). 24 months.
+bb_bailout_burden = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    country_loan_interest_rate_mult = 0.25
+}
+
 # Applied to the champion's own interest group for 24 months when
 # Industrialists or Landowners lead the case — a conflicted champion
 # uses the inquiry to entrench their group's position.

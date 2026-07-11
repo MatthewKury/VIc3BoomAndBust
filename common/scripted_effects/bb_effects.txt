@@ -355,6 +355,265 @@ bb_apply_dissolution_effect = {
 }
 
 
+# ── Bar 1: Monthly Market Event Roll ─────────────────────────
+# Scope: country. Called from je_bb_financial's on_monthly_pulse
+# (player only) — scope:journal_entry must be available so the
+# risk stance and health bars can be read.
+#
+# Each month one market event is rolled. Its base magnitude is
+# scaled by the Financial Risk Stance bar:
+#
+#            band          gains ×   losses ×
+#   Pessimistic  (0-19)      0.4       0.3
+#   Cautious    (20-39)      0.7       0.6
+#   Tolerant    (40-59)      1.0       1.0
+#   Optimistic  (60-79)      1.4       1.7
+#   Audacious  (80-100)      1.8       2.5
+#
+# Losses scale harder than gains: a daring investment climate
+# pays a little more on good news and bleeds much more on bad.
+#
+# Conservative floors: while investors are Pessimistic the
+# market cannot fall below ~35; while Cautious, below ~20.
+# Below the floor, losing rolls are voided, negative trends
+# dissipate, and the bar itself adds a recovery cushion.
+#
+# Some rolls also plant bb_market_trend (a timed monthly drift
+# the bar applies until it expires) — today's news foreshadows
+# tomorrow's market. The newsfeed message hints at the trend.
+#
+# The result is committed to bb_health_shock, which the health
+# bar adds once per month; it is overwritten on every roll.
+#
+# NOTE: var:bb_shock_base comparisons below are safe because
+# this effect only runs from the monthly pulse — it is never
+# previewed in an event-option tooltip (see tooltip-evaluation
+# note above bb_apply_dissolution_effect).
+
+bb_roll_market_event = {
+    # 1. Roll the month's market news
+    random_list = {
+        # Quiet month — nothing newsworthy
+        30 = {
+            set_variable = { name = bb_shock_base value = 0 }
+        }
+
+        # ── Good news ────────────────────────────────────────
+        8 = {
+            set_variable = { name = bb_shock_base value = 1.5 }
+            post_notification = bb_news_earnings
+        }
+        6 = {
+            set_variable = { name = bb_shock_base value = 2.5 }
+            post_notification = bb_news_flotation
+        }
+        6 = {
+            set_variable = { name = bb_shock_base value = 1 }
+            set_variable = { name = bb_market_trend value = 0.25 months = 8 }
+            post_notification = bb_news_foreign_capital
+        }
+        # Easy credit: gain now, pain later
+        6 = {
+            set_variable = { name = bb_shock_base value = 2 }
+            set_variable = { name = bb_market_trend value = -0.3 months = 10 }
+            post_notification = bb_news_credit_expansion
+        }
+        # Confidence builds: small now, growth later
+        4 = {
+            set_variable = { name = bb_shock_base value = 0.5 }
+            set_variable = { name = bb_market_trend value = 0.4 months = 6 }
+            post_notification = bb_news_confidence
+        }
+
+        # ── Bad news ─────────────────────────────────────────
+        6 = {
+            set_variable = { name = bb_shock_base value = -2.5 }
+            post_notification = bb_news_bank_failure
+        }
+        7 = {
+            set_variable = { name = bb_shock_base value = -1.5 }
+            post_notification = bb_news_commodity_glut
+        }
+        5 = {
+            set_variable = { name = bb_shock_base value = -2 }
+            set_variable = { name = bb_market_trend value = -0.25 months = 8 }
+            post_notification = bb_news_fraud_scandal
+        }
+        7 = {
+            set_variable = { name = bb_shock_base value = -1 }
+            post_notification = bb_news_foreign_wobble
+        }
+        # Tight credit: pain now, recovery later
+        5 = {
+            set_variable = { name = bb_shock_base value = -1.5 }
+            set_variable = { name = bb_market_trend value = 0.3 months = 8 }
+            post_notification = bb_news_credit_tightening
+        }
+    }
+
+    # 2. Scale gains by risk stance
+    if = {
+        limit = { var:bb_shock_base > 0 }
+        if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_risk_stance_bar)" < 20
+                }
+            }
+            change_variable = { name = bb_shock_base multiply = 0.4 }
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_risk_stance_bar)" < 40
+                }
+            }
+            change_variable = { name = bb_shock_base multiply = 0.7 }
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_risk_stance_bar)" >= 80
+                }
+            }
+            change_variable = { name = bb_shock_base multiply = 1.8 }
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_risk_stance_bar)" >= 60
+                }
+            }
+            change_variable = { name = bb_shock_base multiply = 1.4 }
+        }
+    }
+    # 2b. Scale losses by risk stance (harder in both directions)
+    else_if = {
+        limit = { var:bb_shock_base < 0 }
+        if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_risk_stance_bar)" < 20
+                }
+            }
+            change_variable = { name = bb_shock_base multiply = 0.3 }
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_risk_stance_bar)" < 40
+                }
+            }
+            change_variable = { name = bb_shock_base multiply = 0.6 }
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_risk_stance_bar)" >= 80
+                }
+            }
+            change_variable = { name = bb_shock_base multiply = 2.5 }
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_risk_stance_bar)" >= 60
+                }
+            }
+            change_variable = { name = bb_shock_base multiply = 1.7 }
+        }
+    }
+
+    # 3. Conservative floors: below the floor, losing rolls are
+    #    voided and any downward trend dissipates
+    if = {
+        limit = {
+            var:bb_shock_base < 0
+            scope:journal_entry = {
+                "scripted_bar_progress(bb_risk_stance_bar)" < 20
+                "scripted_bar_progress(bb_market_health_bar)" < 35
+            }
+        }
+        set_variable = { name = bb_shock_base value = 0 }
+        if = {
+            limit = {
+                has_variable = bb_market_trend
+                var:bb_market_trend < 0
+            }
+            remove_variable = bb_market_trend
+        }
+    }
+    else_if = {
+        limit = {
+            var:bb_shock_base < 0
+            scope:journal_entry = {
+                "scripted_bar_progress(bb_risk_stance_bar)" < 40
+                "scripted_bar_progress(bb_market_health_bar)" < 20
+            }
+        }
+        set_variable = { name = bb_shock_base value = 0 }
+        if = {
+            limit = {
+                has_variable = bb_market_trend
+                var:bb_market_trend < 0
+            }
+            remove_variable = bb_market_trend
+        }
+    }
+
+    # 4. Commit this month's shock (bar adds it once per month)
+    set_variable = { name = bb_health_shock value = var:bb_shock_base }
+    remove_variable = bb_shock_base
+
+    # 5. Major crisis roll: ~8%/month with a 12-month cooldown
+    #    averages one serious event roughly every other year.
+    #    Which event fires depends on where the market stands.
+    if = {
+        limit = { NOT = { has_variable = bb_major_cooldown } }
+        random = {
+            chance = 8
+            set_variable = { name = bb_major_cooldown months = 12 }
+            if = {
+                limit = {
+                    scope:journal_entry = {
+                        "scripted_bar_progress(bb_market_health_bar)" >= 65
+                    }
+                }
+                trigger_event = { id = bb.30 days = 5 }
+            }
+            else_if = {
+                limit = {
+                    scope:journal_entry = {
+                        "scripted_bar_progress(bb_market_health_bar)" < 40
+                    }
+                }
+                trigger_event = { id = bb.31 days = 5 }
+            }
+            else = {
+                trigger_event = { id = bb.32 days = 5 }
+            }
+        }
+    }
+}
+
+
+# ── Bar 1: One-off Market Jolt ───────────────────────────────
+# Scope: country. Adds a one-time bump (positive or negative)
+# to this month's market shock. Used by the major crisis events
+# (bb.30–bb.32); the next monthly roll overwrites the variable,
+# so the jolt is applied exactly once.
+
+bb_market_jolt = {
+    if = {
+        limit = { has_variable = bb_health_shock }
+        change_variable = { name = bb_health_shock add = $VALUE$ }
+    }
+    else = {
+        set_variable = { name = bb_health_shock value = $VALUE$ }
+    }
+}
+
+
 # ── Cleanup ──────────────────────────────────────────────────
 
 bb_remove_all_bb_modifiers = {

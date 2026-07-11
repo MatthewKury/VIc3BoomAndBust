@@ -46,11 +46,13 @@ je_bb_financial = {
         }
     }
 
-    # Re-evaluate and re-apply modifiers each month, player only
+    # Roll the month's market event, then re-evaluate and
+    # re-apply band modifiers — player only
     on_monthly_pulse = {
         effect = {
             if = {
                 limit = { is_local_player = yes }
+                bb_roll_market_event = yes
                 bb_apply_market_health_modifier = yes
                 bb_apply_risk_stance_modifier = yes
                 bb_apply_monopoly_modifier = yes
