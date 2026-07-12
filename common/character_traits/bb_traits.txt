@@ -1,0 +1,30 @@
+﻿# ================================================================
+#  Boom & Bust — Character Traits
+#
+#  bb_bank_governor is the office marker for the Governor of the
+#  National Bank: the trait itself is the record of who holds the
+#  seat (no character-scope variable needed), and its icon is the
+#  visible indicator on the character everywhere they appear.
+#  Added/removed only by script (bb.40 appointment, dismissal
+#  button, bb.43 prosecution); dead characters drop out of the
+#  country's character list, which is how vacancy is detected.
+#
+#  bb_lion_of_the_bourse is earned permanently after 24
+#  consecutive months in office with Market Health >= 70
+#  (tracked in bb_governor_admin_pulse). While its holder sits
+#  as governor it adds +0.2 to the acumen row on the health bar.
+# ================================================================
+
+bb_bank_governor = {
+    type = condition
+    texture = "gfx/interface/icons/character_trait_icons/master_bureaucrat.dds"
+}
+
+bb_lion_of_the_bourse = {
+    type = condition
+    texture = "gfx/interface/icons/character_trait_icons/expert_entrepreneur.dds"
+
+    character_modifier = {
+        character_popularity_add = 25
+    }
+}

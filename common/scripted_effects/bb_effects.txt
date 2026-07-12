@@ -198,7 +198,8 @@ bb_apply_monopoly_modifier = {
 #     traditionalist / reactionary /
 #     royalist / laissez-faire              +0.25 (drags their feet)
 #   Law:
-#     Anticompetitive Legislation           -0.5
+#     Anticompetitive Legislation           -0.25 per Bureau of
+#                                           Market Relations level
 #   Final value clamped to [-3.0, -0.25] where the bar reads it.
 
 bb_apply_dissolution_effect = {
@@ -315,10 +316,50 @@ bb_apply_dissolution_effect = {
         change_variable = { name = bb_case_calc add = 0.25 }
     }
 
-    # 4. Statutory backing
+    # 4. Statutory backing: -0.25 per Bureau of Market Relations
+    #    investment level under Anticompetitive Legislation (the
+    #    law establishes the Bureau, so level >= 1 when active)
     if = {
         limit = { has_law = law_type:law_bb_anticompetitive_legislation }
-        change_variable = { name = bb_case_calc add = -0.5 }
+        if = {
+            limit = {
+                institution_investment_level = {
+                    institution = institution_bb_market_relations
+                    value >= 5
+                }
+            }
+            change_variable = { name = bb_case_calc add = -1.25 }
+        }
+        else_if = {
+            limit = {
+                institution_investment_level = {
+                    institution = institution_bb_market_relations
+                    value >= 4
+                }
+            }
+            change_variable = { name = bb_case_calc add = -1 }
+        }
+        else_if = {
+            limit = {
+                institution_investment_level = {
+                    institution = institution_bb_market_relations
+                    value >= 3
+                }
+            }
+            change_variable = { name = bb_case_calc add = -0.75 }
+        }
+        else_if = {
+            limit = {
+                institution_investment_level = {
+                    institution = institution_bb_market_relations
+                    value >= 2
+                }
+            }
+            change_variable = { name = bb_case_calc add = -0.5 }
+        }
+        else = {
+            change_variable = { name = bb_case_calc add = -0.25 }
+        }
     }
 
     # 5. Charismatic leaders negotiate with the affected elites
@@ -391,7 +432,17 @@ bb_apply_dissolution_effect = {
 # note above bb_apply_dissolution_effect).
 
 bb_roll_market_event = {
+    # 0. Market holiday: the exchange is shuttered (see
+    #    bb_market_holiday_button). No news is rolled — trading
+    #    that never happens cannot move the market. The trend
+    #    variable keeps running; steps 2-4 below operate on a
+    #    zero shock, which is harmless.
+    if = {
+        limit = { has_variable = bb_market_holiday }
+        set_variable = { name = bb_shock_base value = 0 }
+    }
     # 1. Roll the month's market news
+    else = {
     random_list = {
         # Quiet month — nothing newsworthy
         30 = {
@@ -449,6 +500,7 @@ bb_roll_market_event = {
             set_variable = { name = bb_market_trend value = 0.3 months = 8 }
             post_notification = bb_news_credit_tightening
         }
+    }
     }
 
     # 2. Scale gains by risk stance
@@ -524,6 +576,92 @@ bb_roll_market_event = {
         }
     }
 
+    # 2c. Oversight Committees: the Bureau of Market Relations
+    #     spots trouble early — negative shocks dampened 10% per
+    #     investment level (x0.9 at L1 down to x0.5 at L5)
+    if = {
+        limit = {
+            var:bb_shock_base < 0
+            has_law = law_type:law_bb_oversight_committees
+        }
+        if = {
+            limit = {
+                institution_investment_level = {
+                    institution = institution_bb_market_relations
+                    value >= 5
+                }
+            }
+            change_variable = { name = bb_shock_base multiply = 0.5 }
+        }
+        else_if = {
+            limit = {
+                institution_investment_level = {
+                    institution = institution_bb_market_relations
+                    value >= 4
+                }
+            }
+            change_variable = { name = bb_shock_base multiply = 0.6 }
+        }
+        else_if = {
+            limit = {
+                institution_investment_level = {
+                    institution = institution_bb_market_relations
+                    value >= 3
+                }
+            }
+            change_variable = { name = bb_shock_base multiply = 0.7 }
+        }
+        else_if = {
+            limit = {
+                institution_investment_level = {
+                    institution = institution_bb_market_relations
+                    value >= 2
+                }
+            }
+            change_variable = { name = bb_shock_base multiply = 0.8 }
+        }
+        else = {
+            change_variable = { name = bb_shock_base multiply = 0.9 }
+        }
+    }
+
+    # 2d. Bank Governor temperament (trait sets in
+    #     bb_scripted_triggers.txt). A hot-tempered governor
+    #     amplifies everything x1.3 (bigger booms, uglier busts);
+    #     a cool one dampens losses x0.7 (stacks with Oversight);
+    #     an expert entrepreneur spots the openings, gains x1.2.
+    #     A governor with traits from both temperament sets gets
+    #     both multipliers — intentional, mirrors the bar rows.
+    if = {
+        limit = {
+            any_scope_character = {
+                has_trait = bb_bank_governor
+                bb_char_heats_risk = yes
+            }
+        }
+        change_variable = { name = bb_shock_base multiply = 1.3 }
+    }
+    if = {
+        limit = {
+            var:bb_shock_base < 0
+            any_scope_character = {
+                has_trait = bb_bank_governor
+                bb_char_cools_risk = yes
+            }
+        }
+        change_variable = { name = bb_shock_base multiply = 0.7 }
+    }
+    if = {
+        limit = {
+            var:bb_shock_base > 0
+            any_scope_character = {
+                has_trait = bb_bank_governor
+                has_trait = expert_entrepreneur
+            }
+        }
+        change_variable = { name = bb_shock_base multiply = 1.2 }
+    }
+
     # 3. Conservative floors: below the floor, losing rolls are
     #    voided and any downward trend dissipates
     if = {
@@ -568,8 +706,13 @@ bb_roll_market_event = {
     # 5. Major crisis roll: ~8%/month with a 12-month cooldown
     #    averages one serious event roughly every other year.
     #    Which event fires depends on where the market stands.
+    #    Suspended along with everything else during a market
+    #    holiday — no trading, no crisis.
     if = {
-        limit = { NOT = { has_variable = bb_major_cooldown } }
+        limit = {
+            NOT = { has_variable = bb_major_cooldown }
+            NOT = { has_variable = bb_market_holiday }
+        }
         random = {
             chance = 8
             set_variable = { name = bb_major_cooldown months = 12 }
@@ -597,6 +740,48 @@ bb_roll_market_event = {
 }
 
 
+# ── Bureau of Market Relations: Tech-driven Investment Cap ───
+# Scope: country. Called monthly from je_bb_financial's pulse
+# (player only). The Bureau starts with a max investment of 1;
+# the actual cap increases come from the early-load tech shadows
+# in common/technology/technologies/00_bb_society_overrides.txt.
+# This effect only pins a cosmetic charter marker on the country
+# and posts the newsfeed notice (idempotent — guarded on
+# has_modifier). Engine max = plain sum of modifiers (no
+# implicit base 1; stock_exchange grants the first +1 -> cap 1,
+# no marker or news for that baseline step):
+#   corporate_charters       (era 2) +1 -> cap 2
+#   philosophical_pragmatism (era 3) +1 -> cap 3
+#   macroeconomics           (era 5) +2 -> cap 5 (endgame jump)
+
+bb_update_market_relations_cap = {
+    if = {
+        limit = {
+            has_technology_researched = corporate_charters
+            NOT = { has_modifier = bb_market_relations_charter_1 }
+        }
+        add_modifier = { name = bb_market_relations_charter_1 days = -1 }
+        post_notification = bb_news_bureau_charter
+    }
+    if = {
+        limit = {
+            has_technology_researched = philosophical_pragmatism
+            NOT = { has_modifier = bb_market_relations_charter_2 }
+        }
+        add_modifier = { name = bb_market_relations_charter_2 days = -1 }
+        post_notification = bb_news_bureau_charter
+    }
+    if = {
+        limit = {
+            has_technology_researched = macroeconomics
+            NOT = { has_modifier = bb_market_relations_charter_3 }
+        }
+        add_modifier = { name = bb_market_relations_charter_3 days = -1 }
+        post_notification = bb_news_bureau_charter
+    }
+}
+
+
 # ── Bar 1: One-off Market Jolt ───────────────────────────────
 # Scope: country. Adds a one-time bump (positive or negative)
 # to this month's market shock. Used by the major crisis events
@@ -610,6 +795,230 @@ bb_market_jolt = {
     }
     else = {
         set_variable = { name = bb_health_shock value = $VALUE$ }
+    }
+}
+
+
+# ── Bank Governor: Candidate Search ──────────────────────────
+# Scope: country. Shared by bb.1 (the JE launch event doubles as
+# the inaugural appointment) and bb.40 (the appoint button).
+# Saves up to three candidate scopes; the event options gate on
+# each existing. Every candidate must belong to an interest group
+# currently in government — the Bank answers to the coalition of
+# the day, not to whoever happens to be clever.
+
+bb_find_governor_candidates = {
+    # The financier: a magnate from the governing coalition,
+    # ideally one with entrepreneur skill traits
+    random_scope_character = {
+        limit = {
+            has_role_of_type = magnate
+            interest_group = { is_in_government = yes }
+            OR = {
+                has_trait = basic_entrepreneur
+                has_trait = experienced_entrepreneur
+                has_trait = expert_entrepreneur
+            }
+        }
+        save_scope_as = bb_gov_cand_fin
+    }
+    if = {
+        limit = { NOT = { exists = scope:bb_gov_cand_fin } }
+        random_scope_character = {
+            limit = {
+                has_role_of_type = magnate
+                interest_group = { is_in_government = yes }
+            }
+            save_scope_as = bb_gov_cand_fin
+        }
+    }
+
+    # The statesman: a government interest group leader
+    # (never the ruler)
+    random_interest_group = {
+        limit = {
+            is_in_government = yes
+            leader ?= {
+                NOT = { is_ruler_of_own_country = yes }
+            }
+        }
+        leader = { save_scope_as = bb_gov_cand_gov }
+    }
+
+    # The scholar: a studious head for figures, drawn from the
+    # governing coalition
+    random_scope_character = {
+        limit = {
+            NOT = { is_ruler_of_own_country = yes }
+            interest_group = { is_in_government = yes }
+            OR = {
+                has_trait = erudite
+                has_trait = engineer
+                has_trait = meticulous
+                has_trait = innovative
+            }
+        }
+        save_scope_as = bb_gov_cand_sch
+    }
+}
+
+
+# ── Bank Governor: Seat a Candidate ──────────────────────────
+# Scope: country. CANDIDATE = name of a saved character scope
+# (without the scope: prefix). Grants the office trait, empowers
+# the governor's interest group, and opens the tenure ledger.
+
+bb_seat_governor = {
+    scope:$CANDIDATE$ = {
+        add_trait = bb_bank_governor
+        interest_group = {
+            add_modifier = { name = bb_governor_patron days = -1 }
+        }
+    }
+    set_variable = bb_governor_seated
+    set_variable = { name = bb_gov_tenure value = 0 }
+    post_notification = bb_news_governor_appointed
+}
+
+
+# ── Bank Governor: Monthly Administration ────────────────────
+# Scope: country. Called from je_bb_financial's on_monthly_pulse
+# (player only, after bb_roll_market_event) — needs
+# scope:journal_entry for the tenure check.
+#
+# Three duties:
+#  1. Vacancy: the seat was filled (bb_governor_seated) but no
+#     living character carries the trait — the governor has died
+#     or vanished. Clean up, wobble the markets, fire bb.42.
+#  2. Tenure: 24 consecutive months in office with Market Health
+#     >= 70 earns the permanent bb_lion_of_the_bourse trait.
+#  3. Scandal: a governor with vice traits (bb_char_gov_vice)
+#     risks a 4%/month exposure (8% if a past scandal was waved
+#     away — bb_scandal_lax); 6-month cooldown between scandals.
+#
+# NOTE: variable comparisons in limits here are safe — this only
+# runs from the monthly pulse, never an option-tooltip preview.
+
+bb_governor_admin_pulse = {
+    # 1. Vacancy check
+    if = {
+        limit = {
+            has_variable = bb_governor_seated
+            NOT = {
+                any_scope_character = { has_trait = bb_bank_governor }
+            }
+        }
+        bb_clear_governor_office = yes
+        bb_market_jolt = { VALUE = -2 }
+        trigger_event = { id = bb.42 popup = yes }
+    }
+
+    # 2. Tenure toward Lion of the Bourse
+    if = {
+        limit = {
+            any_scope_character = { has_trait = bb_bank_governor }
+        }
+        if = {
+            limit = { NOT = { has_variable = bb_gov_tenure } }
+            set_variable = { name = bb_gov_tenure value = 0 }
+        }
+        if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_market_health_bar)" >= 70
+                }
+            }
+            change_variable = { name = bb_gov_tenure add = 1 }
+            if = {
+                limit = {
+                    var:bb_gov_tenure >= 24
+                    any_scope_character = {
+                        has_trait = bb_bank_governor
+                        NOT = { has_trait = bb_lion_of_the_bourse }
+                    }
+                }
+                random_scope_character = {
+                    limit = { has_trait = bb_bank_governor }
+                    add_trait = bb_lion_of_the_bourse
+                }
+                post_notification = bb_news_lion
+            }
+        }
+        else = {
+            set_variable = { name = bb_gov_tenure value = 0 }
+        }
+    }
+
+    # 3. Scandal roll
+    if = {
+        limit = {
+            NOT = { has_variable = bb_scandal_cooldown }
+            any_scope_character = {
+                has_trait = bb_bank_governor
+                bb_char_gov_vice = yes
+            }
+        }
+        if = {
+            limit = { has_variable = bb_scandal_lax }
+            random = {
+                chance = 8
+                set_variable = { name = bb_scandal_cooldown months = 6 }
+                trigger_event = { id = bb.43 popup = yes }
+            }
+        }
+        else = {
+            random = {
+                chance = 4
+                set_variable = { name = bb_scandal_cooldown months = 6 }
+                trigger_event = { id = bb.43 popup = yes }
+            }
+        }
+    }
+}
+
+
+# ── Bank Governor: Office Cleanup ────────────────────────────
+# Scope: country. Shared by every path that empties the seat:
+# the dismiss button, bb.43 prosecution, and the vacancy check
+# above. Does NOT remove the trait itself — the caller does that
+# while it still has the character (the vacancy path has no
+# character left to clean).
+
+bb_clear_governor_office = {
+    every_interest_group = {
+        limit = { has_modifier = bb_governor_patron }
+        remove_modifier = bb_governor_patron
+    }
+    if = {
+        limit = { has_variable = bb_governor_seated }
+        remove_variable = bb_governor_seated
+    }
+    if = {
+        limit = { has_variable = bb_gov_tenure }
+        remove_variable = bb_gov_tenure
+    }
+}
+
+
+# ── National Bank Intervention: Moral Hazard ─────────────────
+# Scope: country. Each bb.50 bailout teaches investors they will
+# be rescued: a lasting upward pull on the Risk Stance bar (read
+# as var:bb_moral_hazard, clamped 0.1..0.6 at the read site).
+# Repeat interventions stack the pull but do not reset the clock
+# (change_variable does not touch the timer) — close enough, and
+# set_variable would let players refresh-spam the duration down.
+
+bb_add_moral_hazard = {
+    if = {
+        limit = { has_variable = bb_moral_hazard }
+        change_variable = { name = bb_moral_hazard add = $VALUE$ }
+    }
+    else = {
+        set_variable = {
+            name = bb_moral_hazard
+            value = $VALUE$
+            months = $MONTHS$
+        }
     }
 }
 

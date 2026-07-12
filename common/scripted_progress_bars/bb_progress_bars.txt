@@ -46,6 +46,330 @@ bb_market_health_bar = {
             }
         }
 
+        # Bank Governor stewardship: steady drift from the sitting
+        # governor's acumen traits (see bb_traits.txt for the
+        # office). One iterator per trait so values stack; net
+        # clamped to +-0.5. Only the player can appoint, so AI
+        # countries never have a trait-holder and skip this row.
+        if = {
+            limit = {
+                any_scope_character = { has_trait = bb_bank_governor }
+            }
+            add = {
+                desc = "bb_health_governor_acumen"
+                value = 0
+                every_scope_character = {
+                    limit = {
+                        has_trait = bb_bank_governor
+                        OR = {
+                            has_trait = expert_entrepreneur
+                            has_trait = master_bureaucrat
+                        }
+                    }
+                    add = 0.3
+                }
+                every_scope_character = {
+                    limit = {
+                        has_trait = bb_bank_governor
+                        has_trait = experienced_entrepreneur
+                    }
+                    add = 0.2
+                }
+                every_scope_character = {
+                    limit = {
+                        has_trait = bb_bank_governor
+                        has_trait = bb_lion_of_the_bourse
+                    }
+                    add = 0.2
+                }
+                every_scope_character = {
+                    limit = {
+                        has_trait = bb_bank_governor
+                        has_trait = basic_entrepreneur
+                    }
+                    add = 0.1
+                }
+                every_scope_character = {
+                    limit = {
+                        has_trait = bb_bank_governor
+                        has_trait = erudite
+                    }
+                    add = 0.1
+                }
+                every_scope_character = {
+                    limit = {
+                        has_trait = bb_bank_governor
+                        has_trait = engineer
+                    }
+                    add = 0.1
+                }
+                every_scope_character = {
+                    limit = {
+                        has_trait = bb_bank_governor
+                        has_trait = innovative
+                    }
+                    add = 0.1
+                }
+                every_scope_character = {
+                    limit = {
+                        has_trait = bb_bank_governor
+                        has_trait = meticulous
+                    }
+                    add = 0.1
+                }
+                every_scope_character = {
+                    limit = {
+                        has_trait = bb_bank_governor
+                        has_trait = inexperienced
+                    }
+                    add = -0.15
+                }
+                every_scope_character = {
+                    limit = {
+                        has_trait = bb_bank_governor
+                        has_trait = political_appointee
+                    }
+                    add = -0.15
+                }
+                every_scope_character = {
+                    limit = {
+                        has_trait = bb_bank_governor
+                        has_trait = inept
+                    }
+                    add = -0.3
+                }
+                every_scope_character = {
+                    limit = {
+                        has_trait = bb_bank_governor
+                        has_trait = senile
+                    }
+                    add = -0.3
+                }
+                min = -0.5
+                max = 0.5
+            }
+        }
+
+        # ── National conditions (added 2026-07-12) ──────────────
+        # Small monthly drifts read straight off vanilla economic
+        # state, so ordinary play moves the market. Every row is
+        # gated on bb_health_shock so AI countries (which never
+        # roll events) skip all of them. Values are background
+        # pressure: the event shock is +-10 and the trend +-1.5.
+
+        # Sovereign credit ladder (mutually exclusive tiers):
+        # default is the cliff, the debt tiers are the slide.
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                in_default = yes
+            }
+            add = { desc = "bb_health_default" value = -0.5 }
+        }
+        else_if = {
+            limit = {
+                has_variable = bb_health_shock
+                scaled_debt >= 0.8
+            }
+            add = { desc = "bb_health_debt_heavy" value = -0.3 }
+        }
+        else_if = {
+            limit = {
+                has_variable = bb_health_shock
+                scaled_debt >= 0.5
+            }
+            add = { desc = "bb_health_debt_high" value = -0.15 }
+        }
+        else_if = {
+            limit = {
+                has_variable = bb_health_shock
+                scaled_debt >= 0.25
+            }
+            add = { desc = "bb_health_debt_rising" value = -0.05 }
+        }
+
+        # Healthy gold reserves steady the market
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                scaled_gold_reserves >= 0.5
+            }
+            add = { desc = "bb_health_reserves" value = 0.1 }
+        }
+
+        # Industrial primacy: +0.05 per flagship good in which the
+        # nation is the leading world producer (the same standing
+        # that earns prestige). One row per good so the breakdown
+        # names each dominant industry.
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:coal
+            }
+            add = { desc = "bb_health_lead_coal" value = 0.05 }
+        }
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:iron
+            }
+            add = { desc = "bb_health_lead_iron" value = 0.05 }
+        }
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:steel
+            }
+            add = { desc = "bb_health_lead_steel" value = 0.05 }
+        }
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:tools
+            }
+            add = { desc = "bb_health_lead_tools" value = 0.05 }
+        }
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:engines
+            }
+            add = { desc = "bb_health_lead_engines" value = 0.05 }
+        }
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:automobiles
+            }
+            add = { desc = "bb_health_lead_automobiles" value = 0.05 }
+        }
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:oil
+            }
+            add = { desc = "bb_health_lead_oil" value = 0.05 }
+        }
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:rubber
+            }
+            add = { desc = "bb_health_lead_rubber" value = 0.05 }
+        }
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:fabric
+            }
+            add = { desc = "bb_health_lead_fabric" value = 0.05 }
+        }
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:clothes
+            }
+            add = { desc = "bb_health_lead_clothes" value = 0.05 }
+        }
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:furniture
+            }
+            add = { desc = "bb_health_lead_furniture" value = 0.05 }
+        }
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:paper
+            }
+            add = { desc = "bb_health_lead_paper" value = 0.05 }
+        }
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:luxury_clothes
+            }
+            add = { desc = "bb_health_lead_luxury_clothes" value = 0.05 }
+        }
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:porcelain
+            }
+            add = { desc = "bb_health_lead_porcelain" value = 0.05 }
+        }
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                leading_producer_of = g:fine_art
+            }
+            add = { desc = "bb_health_lead_fine_art" value = 0.05 }
+        }
+
+        # Goods shortages: -0.05 per market good in serious
+        # shortage (the >0.33 ratio vanilla uses for its shortage
+        # alert), capped at -0.4. Note the feedback loop: the
+        # Crashing band cuts throughput, which causes shortages,
+        # which deepen the crash — intervention is the counter.
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                market ?= {
+                    any_market_goods = {
+                        market_goods_shortage_ratio > 0.33
+                    }
+                }
+            }
+            add = {
+                desc = "bb_health_shortages"
+                value = 0
+                market = {
+                    every_market_goods = {
+                        limit = { market_goods_shortage_ratio > 0.33 }
+                        add = -0.05
+                    }
+                }
+                min = -0.4
+                max = 0
+            }
+        }
+
+        # Unrest: -0.05 per state at 25%+ turmoil, capped at -0.4.
+        # One angry province is noise; eight is capital flight.
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                any_scope_state = { turmoil >= 0.25 }
+            }
+            add = {
+                desc = "bb_health_turmoil"
+                value = 0
+                every_scope_state = {
+                    limit = { turmoil >= 0.25 }
+                    add = -0.05
+                }
+                min = -0.4
+                max = 0
+            }
+        }
+
+        # Political certainty is priced in
+        if = {
+            limit = {
+                has_variable = bb_health_shock
+                legitimacy < 25
+            }
+            add = { desc = "bb_health_legitimacy_low" value = -0.2 }
+        }
+        else_if = {
+            limit = {
+                has_variable = bb_health_shock
+                legitimacy >= 90
+            }
+            add = { desc = "bb_health_legitimacy_high" value = 0.1 }
+        }
+
         # Conservative floors: pessimistic or cautious investors
         # hold so little exposure that the market cannot collapse
         # under them. bb_roll_market_event also voids losing rolls
@@ -99,6 +423,85 @@ bb_risk_stance_bar = {
             }
         }
 
+        # Bank Governor temperament: the person running the money
+        # sets the mood. Communicator traits (charismatic, orator,
+        # demagogue) amplify the pull to 0.35. A governor who also
+        # leads a government IG is counted on both rows — wearing
+        # two hats means twice the influence, intentional.
+        if = {
+            limit = {
+                any_scope_character = {
+                    has_trait = bb_bank_governor
+                    bb_char_heats_risk = yes
+                    bb_char_gov_communicator = yes
+                }
+            }
+            add = { desc = "bb_risk_governor_heats" value = 0.35 }
+        }
+        else_if = {
+            limit = {
+                any_scope_character = {
+                    has_trait = bb_bank_governor
+                    bb_char_heats_risk = yes
+                }
+            }
+            add = { desc = "bb_risk_governor_heats" value = 0.2 }
+        }
+        if = {
+            limit = {
+                any_scope_character = {
+                    has_trait = bb_bank_governor
+                    bb_char_cools_risk = yes
+                    bb_char_gov_communicator = yes
+                }
+            }
+            add = { desc = "bb_risk_governor_cools" value = -0.35 }
+        }
+        else_if = {
+            limit = {
+                any_scope_character = {
+                    has_trait = bb_bank_governor
+                    bb_char_cools_risk = yes
+                }
+            }
+            add = { desc = "bb_risk_governor_cools" value = -0.2 }
+        }
+
+        # Moral hazard: every National Bank rescue (bb.50) teaches
+        # investors that losses will be socialised. Stacked by
+        # bb_add_moral_hazard, clamped at the read site.
+        if = {
+            limit = { has_variable = bb_moral_hazard }
+            add = {
+                desc = "bb_risk_moral_hazard"
+                value = var:bb_moral_hazard
+                min = 0.1
+                max = 0.6
+            }
+        }
+
+        # Exuberance: a healthy market breeds overconfidence.
+        # This is the engine of the boom-bust cycle — rising
+        # health pushes Risk Stance up, and a high stance
+        # amplifies losses (x2.5 at Audacious) when the luck
+        # turns. Stronger at the Booming tier than at Growing.
+        if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_market_health_bar)" >= 80
+                }
+            }
+            add = { desc = "bb_risk_exuberance_booming" value = 0.4 }
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_market_health_bar)" >= 60
+                }
+            }
+            add = { desc = "bb_risk_exuberance_growing" value = 0.15 }
+        }
+
         # ── Character temperaments (traits classified in
         #    bb_scripted_triggers.txt) ─────────────────────────────
         # Ruler: very strong influence (±0.3)
@@ -119,7 +522,7 @@ bb_risk_stance_bar = {
                 any_interest_group = {
                     is_in_government = yes
                     leader ?= {
-                        NOT = { is_ruler = yes }
+                        NOT = { is_ruler_of_own_country = yes }
                         OR = {
                             bb_char_heats_risk = yes
                             bb_char_cools_risk = yes
@@ -134,7 +537,7 @@ bb_risk_stance_bar = {
                     limit = {
                         is_in_government = yes
                         leader ?= {
-                            NOT = { is_ruler = yes }
+                            NOT = { is_ruler_of_own_country = yes }
                             bb_char_heats_risk = yes
                         }
                     }
@@ -144,7 +547,7 @@ bb_risk_stance_bar = {
                     limit = {
                         is_in_government = yes
                         leader ?= {
-                            NOT = { is_ruler = yes }
+                            NOT = { is_ruler_of_own_country = yes }
                             bb_char_cools_risk = yes
                         }
                     }
@@ -161,7 +564,7 @@ bb_risk_stance_bar = {
             limit = {
                 any_scope_character = {
                     OR = {
-                        is_agitator = yes
+                        has_role_of_type = agitator
                         has_role_of_type = magnate
                     }
                     OR = {
@@ -176,7 +579,7 @@ bb_risk_stance_bar = {
                 every_scope_character = {
                     limit = {
                         OR = {
-                            is_agitator = yes
+                            has_role_of_type = agitator
                             has_role_of_type = magnate
                         }
                         bb_char_heats_risk = yes
@@ -186,7 +589,7 @@ bb_risk_stance_bar = {
                 every_scope_character = {
                     limit = {
                         OR = {
-                            is_agitator = yes
+                            has_role_of_type = agitator
                             has_role_of_type = magnate
                         }
                         bb_char_cools_risk = yes
@@ -245,18 +648,174 @@ bb_monopoly_power_bar = {
             add = { desc = "bb_monopoly_tick_command" value = -0.3 }
         }
 
-        # Antitrust law modifier (multiplies the accumulated law rate above)
+        # Antitrust law modifier: scales with the Bureau of Market
+        # Relations investment level (multiplies the accumulated law
+        # rate above). Free Market has no Bureau and no multiplier.
+        #
+        # Letters of Patent: the patent office entrenches charter-
+        # holders — x1.3 at L1, +0.3 per level, x2.5 at L5.
         if = {
             limit = { has_law = law_type:law_bb_letters_of_patent }
-            multiply = 1.5
+            if = {
+                limit = {
+                    institution_investment_level = {
+                        institution = institution_bb_market_relations
+                        value >= 5
+                    }
+                }
+                multiply = 2.5
+            }
+            else_if = {
+                limit = {
+                    institution_investment_level = {
+                        institution = institution_bb_market_relations
+                        value >= 4
+                    }
+                }
+                multiply = 2.2
+            }
+            else_if = {
+                limit = {
+                    institution_investment_level = {
+                        institution = institution_bb_market_relations
+                        value >= 3
+                    }
+                }
+                multiply = 1.9
+            }
+            else_if = {
+                limit = {
+                    institution_investment_level = {
+                        institution = institution_bb_market_relations
+                        value >= 2
+                    }
+                }
+                multiply = 1.6
+            }
+            else = {
+                multiply = 1.3
+            }
         }
+        # Oversight Committees: the watchdog restrains concentration —
+        # x0.65 at L1, -0.15 per level, x0.05 at L5 (near-total halt).
         else_if = {
             limit = { has_law = law_type:law_bb_oversight_committees }
-            multiply = 0.5
+            if = {
+                limit = {
+                    institution_investment_level = {
+                        institution = institution_bb_market_relations
+                        value >= 5
+                    }
+                }
+                multiply = 0.05
+            }
+            else_if = {
+                limit = {
+                    institution_investment_level = {
+                        institution = institution_bb_market_relations
+                        value >= 4
+                    }
+                }
+                multiply = 0.2
+            }
+            else_if = {
+                limit = {
+                    institution_investment_level = {
+                        institution = institution_bb_market_relations
+                        value >= 3
+                    }
+                }
+                multiply = 0.35
+            }
+            else_if = {
+                limit = {
+                    institution_investment_level = {
+                        institution = institution_bb_market_relations
+                        value >= 2
+                    }
+                }
+                multiply = 0.5
+            }
+            else = {
+                multiply = 0.65
+            }
         }
+        # Anticompetitive Legislation: statutory restraint —
+        # x0.85 at L1, -0.15 per level, x0.25 at L5.
         else_if = {
             limit = { has_law = law_type:law_bb_anticompetitive_legislation }
-            multiply = 0.8
+            if = {
+                limit = {
+                    institution_investment_level = {
+                        institution = institution_bb_market_relations
+                        value >= 5
+                    }
+                }
+                multiply = 0.25
+            }
+            else_if = {
+                limit = {
+                    institution_investment_level = {
+                        institution = institution_bb_market_relations
+                        value >= 4
+                    }
+                }
+                multiply = 0.4
+            }
+            else_if = {
+                limit = {
+                    institution_investment_level = {
+                        institution = institution_bb_market_relations
+                        value >= 3
+                    }
+                }
+                multiply = 0.55
+            }
+            else_if = {
+                limit = {
+                    institution_investment_level = {
+                        institution = institution_bb_market_relations
+                        value >= 2
+                    }
+                }
+                multiply = 0.7
+            }
+            else = {
+                multiply = 0.85
+            }
+        }
+
+        # Chartered monopolies: +0.15 per company holding a
+        # monopoly charter, capped at +0.45. Placed AFTER the
+        # antitrust multipliers on purpose — a royal charter is
+        # legally sanctioned concentration the Bureau cannot
+        # restrain (the acceleration below still applies).
+        if = {
+            limit = {
+                any_company = { company_has_monopoly = yes }
+            }
+            add = {
+                desc = "bb_monopoly_chartered"
+                value = 0
+                every_company = {
+                    limit = { company_has_monopoly = yes }
+                    add = 0.15
+                }
+                min = 0
+                max = 0.45
+            }
+        }
+
+        # A hushed-up scandal at the National Bank (bb.43 cover-up):
+        # the men who kept the secret now trade favours in the dark.
+        if = {
+            limit = { has_variable = bb_backroom_influence }
+            add = {
+                desc = "bb_monopoly_backroom"
+                value = var:bb_backroom_influence
+                min = 0
+                max = 1
+            }
         }
 
         # Active dissolution case pushes the bar down each month.

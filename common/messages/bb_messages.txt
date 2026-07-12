@@ -44,6 +44,15 @@ bb_news_confidence = {
     days = 28
 }
 
+# ── Bureau of Market Relations ───────────────────────────────
+
+bb_news_bureau_charter = {
+    type = country
+    texture = "gfx/interface/icons/notification_icons/technology.dds"
+    notification_type = feed
+    days = 28
+}
+
 # ── Bad news ─────────────────────────────────────────────────
 
 bb_news_bank_failure = {
@@ -75,6 +84,29 @@ bb_news_foreign_wobble = {
 }
 
 bb_news_credit_tightening = {
+    type = country
+    texture = "gfx/interface/icons/notification_icons/authority.dds"
+    notification_type = feed
+    days = 28
+}
+
+# ── Bank Governor & Interventions ────────────────────────────
+
+bb_news_governor_appointed = {
+    type = country
+    texture = "gfx/interface/icons/notification_icons/influence.dds"
+    notification_type = feed
+    days = 28
+}
+
+bb_news_lion = {
+    type = country
+    texture = "gfx/interface/icons/notification_icons/rank_up.dds"
+    notification_type = feed
+    days = 28
+}
+
+bb_news_market_holiday = {
     type = country
     texture = "gfx/interface/icons/notification_icons/authority.dds"
     notification_type = feed

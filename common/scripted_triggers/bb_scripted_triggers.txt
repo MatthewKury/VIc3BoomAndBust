@@ -27,3 +27,28 @@ bb_char_cools_risk = {
         has_trait = erudite
     }
 }
+
+# ── Bank Governor trait classes ─────────────────────────────────
+
+# Vices that expose a sitting Bank Governor to the bb.43 scandal
+# roll in bb_governor_admin_pulse.
+bb_char_gov_vice = {
+    OR = {
+        has_trait = grifter
+        has_trait = expensive_tastes
+        has_trait = alcoholic
+        has_trait = opium_addiction
+        has_trait = cocaine_addiction
+    }
+}
+
+# Communicators set the national mood: a governor with one of
+# these amplifies their temperament row on the Risk Stance bar
+# (0.35 instead of 0.2) and can jawbone the markets in bb.50.
+bb_char_gov_communicator = {
+    OR = {
+        has_trait = charismatic
+        has_trait = inspirational_orator
+        has_trait = demagogue
+    }
+}

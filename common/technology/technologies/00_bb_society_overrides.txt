@@ -1,0 +1,109 @@
+﻿# ============================================================
+#  Boom & Bust — Society Tech Overrides (early-load shadow)
+#
+#  The tech database is FIRST-read-wins: files load in ASCII
+#  filename order across vanilla + mods, and duplicate keys in
+#  later files are discarded. This file sorts before vanilla
+#  30_society.txt, so these three copies win and vanilla logs
+#  three harmless "Duplicated key X will not be created from
+#  file: .../30_society.txt" lines at every launch — expected.
+#
+#  Each tech is a full copy of its vanilla 1.13 definition plus
+#  one "# BB:" tagged line: the Bureau of Market Relations
+#  max-investment modifier (works because the institution key
+#  starts with "institution_" — see bb_institutions.txt).
+#  The engine max is the plain SUM of these modifiers (no
+#  implicit base 1; the game only min-clamps the level to 1).
+#  Cap ladder:
+#    stock_exchange           (era 1) +1 -> cap 1 (institution
+#                                     becomes properly investable)
+#    corporate_charters       (era 2) +1 -> cap 2
+#    philosophical_pragmatism (era 3) +1 -> cap 3
+#    macroeconomics           (era 5) +2 -> cap 5 (endgame jump)
+#
+#  PATCH SENSITIVITY: only these four techs are masked. After
+#  a game patch, re-diff these blocks against vanilla
+#  30_society.txt and re-apply any upstream changes.
+# ============================================================
+
+stock_exchange = {
+	era = era_1
+	texture = "gfx/interface/icons/invention_icons/stock_exchanges.dds"
+	category = society
+
+	modifier = {
+		state_market_access_price_impact = 0.1
+		country_institution_bb_market_relations_max_investment_add = 1 # BB: Bureau cap -> 1
+	}
+
+	unlocking_technologies = {
+		international_trade
+	}
+
+	ai_weight = {
+		value = 1
+	}
+}
+
+corporate_charters = {
+	era = era_2
+	texture = "gfx/interface/icons/invention_icons/corporate_charters.dds"
+	category = society
+
+	modifier = {
+		country_max_companies_add = 1
+		country_free_charters_add = 2
+		country_institution_bb_market_relations_max_investment_add = 1 # BB: Bureau cap 1 -> 2
+	}
+
+	unlocking_technologies = {
+		stock_exchange
+	}
+
+	ai_weight = {
+		value = 3 # very important tech
+	}
+}
+
+philosophical_pragmatism = {
+	era = era_3
+	texture = "gfx/interface/icons/invention_icons/philosophical_pragmatism.dds"
+	category = society
+
+	modifier = {
+		country_influence_mult = 0.25
+		country_diplomatic_play_maneuvers_mult = 0.25
+		state_bureaucracy_population_base_cost_factor_mult = -0.05
+		state_literacy_growth_add = 0.0001
+		country_institution_bb_market_relations_max_investment_add = 1 # BB: Bureau cap 2 -> 3
+	}
+
+	unlocking_technologies = {
+		psychiatry
+	}
+
+	ai_weight = {
+		value = 1
+	}
+}
+
+macroeconomics = {
+	era = era_5
+	texture = "gfx/interface/icons/invention_icons/macroeconomics.dds"
+	category = society
+
+	modifier = {
+		country_max_companies_add = 1
+		state_market_access_price_impact = 0.05
+		country_institution_bb_market_relations_max_investment_add = 2 # BB: Bureau cap 3 -> 5
+	}
+
+	unlocking_technologies = {
+		international_exchange_standards
+		corporate_management
+	}
+
+	ai_weight = {
+		value = 3 # very important tech
+	}
+}

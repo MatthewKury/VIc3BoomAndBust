@@ -129,6 +129,30 @@ bb_monopoly_dissolution = {
     icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_positive.dds
 }
 
+# ── Bureau of Market Relations: Investment Cap Charters ─────
+# Cosmetic MARKERS only — the actual max-investment bonus lives
+# in the early-load tech shadows (common/technology/
+# technologies/00_bb_society_overrides.txt). These markers drive
+# the has_modifier guards and the bb_news_bureau_charter
+# notification in bb_update_market_relations_cap. Cap ladder
+# (engine max = plain sum of modifiers, no implicit base;
+# stock_exchange grants the unmarked first +1 -> cap 1):
+#   charter_1  corporate_charters       (era 2)  +1 -> cap 2
+#   charter_2  philosophical_pragmatism (era 3)  +1 -> cap 3
+#   charter_3  macroeconomics           (era 5)  +2 -> cap 5
+
+bb_market_relations_charter_1 = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_positive.dds
+}
+
+bb_market_relations_charter_2 = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_positive.dds
+}
+
+bb_market_relations_charter_3 = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_positive.dds
+}
+
 # The treasury borrows heavily to guarantee bank deposits during
 # a panic (bb.31 option a). 24 months.
 bb_bailout_burden = {
@@ -143,4 +167,39 @@ bb_case_conflicted_champion = {
     icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_positive.dds
     interest_group_pol_str_mult = 0.20
     interest_group_pop_attraction_mult = 0.10
+}
+
+# ── Bank Governor & Market Interventions ────────────────────────
+
+# The governor's interest group controls the nation's money while
+# their leader holds the office. Permanent (days = -1); stripped by
+# bb_clear_governor_office on every exit path (dismissal, scandal
+# prosecution, death vacancy).
+bb_governor_patron = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_positive.dds
+    interest_group_pol_str_mult = 0.10
+}
+
+# Sacking the Governor of the National Bank without cause. 12
+# months, decaying.
+bb_governor_dismissal_backlash = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    country_authority_add = -20
+}
+
+# The exchange is suspended (Market Holiday button). 4 months:
+# no market shocks, but commerce chokes and private investment
+# from the moneyed classes dries up.
+bb_exchange_closed = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    building_throughput_add = -0.05
+    state_capitalists_investment_pool_contribution_add = -0.25
+    state_aristocrats_investment_pool_contribution_add = -0.25
+}
+
+# Hushing up the governor's scandal (bb.43 cover-up option).
+# 24 months of quiet favours owed to men who know too much.
+bb_coverup_strain = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    country_authority_add = -25
 }

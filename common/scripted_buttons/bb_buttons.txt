@@ -68,3 +68,147 @@ bb_dissolve_monopoly_button = {
         trigger_event = { id = bb.10 popup = yes }
     }
 }
+
+# ── Appoint a Bank Governor ─────────────────────────────────────
+# Visible while the seat is empty (the bb_bank_governor trait is
+# the office record — see bb_traits.txt). Opens bb.40, which
+# offers candidates drawn live from the character pool.
+
+bb_appoint_governor_button = {
+    name = "bb_appoint_governor_button"
+    desc = "bb_appoint_governor_button_desc"
+
+    visible = {
+        NOT = {
+            any_scope_character = { has_trait = bb_bank_governor }
+        }
+    }
+
+    ai_chance = {
+        value = 0
+    }
+
+    effect = {
+        trigger_event = { id = bb.40 popup = yes }
+    }
+}
+
+# ── Dismiss the Governor ────────────────────────────────────────
+# Mutually exclusive with the appoint button. Sacking the governor
+# angers their interest group and drains authority for a year —
+# unless the government was recently reformed or re-elected
+# (bb_fresh_mandate, set by bb.3 for 12 months): a new government
+# naming its own banker is ordinary housekeeping, so the change
+# costs only a brief administrative backlash and no radicals.
+
+bb_dismiss_governor_button = {
+    name = "bb_dismiss_governor_button"
+    desc = "bb_dismiss_governor_button_desc"
+
+    visible = {
+        any_scope_character = { has_trait = bb_bank_governor }
+    }
+
+    ai_chance = {
+        value = 0
+    }
+
+    effect = {
+        random_scope_character = {
+            limit = { has_trait = bb_bank_governor }
+            save_scope_as = bb_gov_out
+        }
+        if = {
+            limit = { has_variable = bb_fresh_mandate }
+            add_modifier = {
+                name = bb_governor_dismissal_backlash
+                months = 3
+                is_decaying = yes
+            }
+        }
+        else = {
+            add_radicals = {
+                value = small_radicals
+                interest_group = scope:bb_gov_out.interest_group
+            }
+            add_modifier = {
+                name = bb_governor_dismissal_backlash
+                months = 12
+                is_decaying = yes
+            }
+        }
+        scope:bb_gov_out = {
+            remove_trait = bb_bank_governor
+        }
+        bb_clear_governor_office = yes
+    }
+}
+
+# ── National Bank Intervention (lender of last resort) ──────────
+# Visible only while Market Health < 40. Opens bb.50: pump treasury
+# money into the markets at the price of moral hazard (a lasting
+# upward pull on Risk Stance). 24-month cooldown keeps it a crisis
+# tool rather than a faucet.
+
+bb_intervene_button = {
+    name = "bb_intervene_button"
+    desc = "bb_intervene_button_desc"
+
+    visible = {
+        scope:journal_entry = {
+            "scripted_bar_progress(bb_market_health_bar)" < 40
+        }
+    }
+
+    cooldown = { months = 24 }
+
+    ai_chance = {
+        value = 0
+    }
+
+    effect = {
+        trigger_event = { id = bb.50 popup = yes }
+    }
+}
+
+# ── Suspend the Exchange (market holiday) ───────────────────────
+# Panic-band emergency brake, visible only while Market Health
+# < 20. For 4 months bb_roll_market_event skips all shocks and
+# major-event rolls (the underlying trend keeps running — closing
+# the doors buys time, it does not fix fundamentals). Capitalists
+# are furious and the closure itself drags on the economy.
+
+bb_market_holiday_button = {
+    name = "bb_market_holiday_button"
+    desc = "bb_market_holiday_button_desc"
+
+    visible = {
+        scope:journal_entry = {
+            "scripted_bar_progress(bb_market_health_bar)" < 20
+        }
+    }
+
+    cooldown = { months = 36 }
+
+    ai_chance = {
+        value = 0
+    }
+
+    effect = {
+        set_variable = { name = bb_market_holiday months = 4 }
+        set_variable = { name = bb_health_shock value = 0 }
+        add_modifier = {
+            name = bb_exchange_closed
+            months = 4
+        }
+        add_radicals = {
+            value = medium_radicals
+            pop_type = capitalists
+        }
+        add_radicals = {
+            value = small_radicals
+            pop_type = shopkeepers
+        }
+        post_notification = bb_news_market_holiday
+    }
+}

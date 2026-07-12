@@ -17,6 +17,9 @@ je_bb_financial = {
 
     weight = 100
 
+    should_be_pinned_by_default_involved = yes
+    should_be_pinned_by_default_uninvolved_or_context = yes
+
     is_shown_when_inactive = {
         is_player = yes
     }
@@ -27,6 +30,10 @@ je_bb_financial = {
 
     scripted_button = bb_fiscal_temperature_button
     scripted_button = bb_dissolve_monopoly_button
+    scripted_button = bb_appoint_governor_button
+    scripted_button = bb_dismiss_governor_button
+    scripted_button = bb_intervene_button
+    scripted_button = bb_market_holiday_button
 
     possible = {
         hidden_trigger = { always = yes }
@@ -36,13 +43,16 @@ je_bb_financial = {
         hidden_trigger = { always = no }
     }
 
-    # Apply starting modifiers only for the human player.
-    # Bars start at: health=50 (Stable), stance=50 (Tolerant), monopoly=10 (Non-existent)
+    # Apply starting modifiers only for the human player, and
+    # announce the Financial Monitor with the opening-trend
+    # choice (bb.1).
     immediate = {
         if = {
             limit = { is_local_player = yes }
             add_modifier = { name = bb_market_stable days = -1 }
             add_modifier = { name = bb_stance_tolerant days = -1 }
+            bb_update_market_relations_cap = yes
+            trigger_event = { id = bb.1 days = 3 }
         }
     }
 
@@ -52,7 +62,9 @@ je_bb_financial = {
         effect = {
             if = {
                 limit = { is_local_player = yes }
+                bb_update_market_relations_cap = yes
                 bb_roll_market_event = yes
+                bb_governor_admin_pulse = yes
                 bb_apply_market_health_modifier = yes
                 bb_apply_risk_stance_modifier = yes
                 bb_apply_monopoly_modifier = yes

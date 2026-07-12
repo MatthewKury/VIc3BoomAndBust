@@ -5,6 +5,7 @@
   "game_id": "victoria3",
   "supported_game_version" : "1.13",
   "short_description" : "Adds a an only player facing journal entry that attempts to simulate the complications that arise from the dependence of a financial market",
+  "patch_sensitivity_note" : "common/technology/technologies/00_bb_society_overrides.txt shadows four vanilla society techs (stock_exchange, corporate_charters, philosophical_pragmatism, macroeconomics, copied from 30_society.txt @ game 1.13, each plus one 'BB:'-tagged Bureau max-investment line). The tech database is first-read-wins in ASCII filename order, so the 00_ file wins and vanilla logs four harmless 'Duplicated key' lines per launch. After every game patch, re-diff the four blocks against vanilla 30_society.txt and re-apply upstream changes. LIKEWISE common/ideologies/00_bb_ideology_overrides.txt shadows 14 vanilla IG ideologies (copied from 00_ig_ideologies.txt @ game 1.13, each plus one 'BB:'-tagged lawgroup_bb_antitrust block) — re-diff those after every patch too.",
   "tags" : ["gameplay"],
   "relationships" : [],
   "game_custom_data" : {

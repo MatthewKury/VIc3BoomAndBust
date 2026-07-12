@@ -1,0 +1,21 @@
+﻿# ============================================================
+#  Boom & Bust — Modifier Type Definitions
+#
+#  The code registers one max-investment modifier type per
+#  institution, named country_<institution_key>_max_investment_add.
+#  CRITICAL: the institution key itself MUST start with
+#  "institution_" (like every vanilla key and Better Politics Mod
+#  key) — with any other prefix the engine's cap lookup never
+#  finds the modifier and the institution is stuck at level 1,
+#  even though the modifier registers, displays, and sits on the
+#  country. This entry only configures display for the
+#  code-generated type.
+# ============================================================
+
+country_institution_bb_market_relations_max_investment_add = {
+    decimals = 0
+    color = good
+    game_data = {
+        ai_value = 0
+    }
+}

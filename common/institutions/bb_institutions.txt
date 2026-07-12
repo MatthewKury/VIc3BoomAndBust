@@ -1,0 +1,38 @@
+﻿# ============================================================
+#  Boom & Bust — Institutions  (common/institutions/)
+#
+#  Bureau of Market Relations: established by every antitrust
+#  law except Free Market. The institution itself is neutral —
+#  its per-level effects come entirely from the governing law
+#  (institution_modifier blocks in bb_antitrust_laws.txt) and
+#  from scripted interactions:
+#    Letters of Patent   — cheaper military/construction goods,
+#                          FASTER Monopoly Power growth per level
+#    Oversight Committees — slower Monopoly Power growth and
+#                          dampened market-event losses per level
+#    Anticompetitive Leg. — slower Monopoly Power growth, weaker
+#                          capitalists, stronger dissolution
+#                          cases, small throughput compliance
+#                          cost per level
+#
+#  Max investment level is tech-driven, not law-driven: the cap
+#  bonus is embedded in early-load tech shadows
+#  (common/technology/technologies/00_bb_society_overrides.txt).
+#  The engine max is the plain SUM of the modifiers (no implicit
+#  base 1 — the level is merely min-clamped to 1):
+#    stock_exchange           (era 1) +1 -> cap 1
+#    corporate_charters       (era 2) +1 -> cap 2
+#    philosophical_pragmatism (era 3) +1 -> cap 3
+#    macroeconomics           (era 5) +2 -> cap 5 (endgame jump)
+#  NOTE: the institution key MUST start with "institution_" or
+#  the engine's max-investment lookup silently fails and the
+#  institution is stuck at level 1. The modifier type display is
+#  configured in common/modifier_type_definitions/
+#  bb_modifier_types.txt.
+# ============================================================
+
+institution_bb_market_relations = {
+    icon = "gfx/interface/icons/institution_icons/home_affairs.dds"
+    background_texture = "gfx/interface/illustrations/institutions/home_affairs.dds"
+    modifier = {}
+}

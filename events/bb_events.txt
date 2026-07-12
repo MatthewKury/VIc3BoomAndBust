@@ -4,6 +4,103 @@
 #  Boom & Bust — Events
 # ================================================================
 
+# ── bb.1: The Age of Capital (JE launch + inaugural governor) ─
+# Fired from je_bb_financial's immediate block (player only,
+# days = 3). Introduces the journal entry's theme, then puts the
+# government's first duty on the table: naming the inaugural
+# Governor of the National Bank. Same candidate machinery as
+# bb.40 (bb_find_governor_candidates / bb_seat_governor); the
+# old opening-trend choice was removed 2026-07-12 — the market
+# now opens on whatever hand takes the tiller.
+
+bb.1 = {
+    type = country_event
+    placement = ROOT
+    title = bb.1.t
+    desc  = bb.1.desc
+
+    duration = 3
+
+    event_image = {
+        video = "europenorthamerica_capitalists_meeting"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    immediate = {
+        bb_find_governor_candidates = yes
+    }
+
+    # The financier
+    option = {
+        name = bb.1.a
+        trigger = { exists = scope:bb_gov_cand_fin }
+        custom_tooltip = bb.1.a.tt
+        bb_seat_governor = { CANDIDATE = bb_gov_cand_fin }
+    }
+
+    # The statesman
+    option = {
+        name = bb.1.b
+        trigger = { exists = scope:bb_gov_cand_gov }
+        custom_tooltip = bb.1.b.tt
+        bb_seat_governor = { CANDIDATE = bb_gov_cand_gov }
+    }
+
+    # The scholar
+    option = {
+        name = bb.1.c
+        trigger = { exists = scope:bb_gov_cand_sch }
+        custom_tooltip = bb.1.c.tt
+        bb_seat_governor = { CANDIDATE = bb_gov_cand_sch }
+    }
+
+    # Leave the seat empty for now
+    option = {
+        name = bb.1.z
+        default_option = yes
+    }
+}
+
+# ── bb.2: Bureau Cap Refresh (hidden, on_acquired_technology) ─
+# Applies the tech-driven Bureau investment-cap charters the
+# moment a technology finishes researching (the monthly pulse
+# would otherwise lag by up to a month). Hidden events must not
+# have option blocks.
+
+bb.2 = {
+    type = country_event
+    hidden = yes
+
+    trigger = {
+        is_player = yes
+    }
+
+    immediate = {
+        bb_update_market_relations_cap = yes
+    }
+}
+
+# ── bb.3: Fresh Mandate (hidden, government reformed/election) ─
+# Fired from on_government_reformed and on_election_campaign_end
+# (bb_on_actions.txt). A newly settled government may replace the
+# Bank Governor quietly for 12 months: the dismiss button skips
+# the radicals and most of the authority backlash while
+# bb_fresh_mandate is live. Hidden events must not have options.
+
+bb.3 = {
+    type = country_event
+    hidden = yes
+
+    trigger = {
+        is_player = yes
+    }
+
+    immediate = {
+        set_variable = { name = bb_fresh_mandate months = 12 }
+    }
+}
+
 # ── bb.10: Dissolve Monopoly — Character Selection ──────────
 # Triggered by bb_dissolve_monopoly_decision.
 # Player selects a government IG leader to champion the case.
@@ -402,6 +499,25 @@ bb.31 = {
             pop_type = aristocrats
         }
     }
+
+    # Bureau of Market Relations at level 2+: an orderly resolution
+    # without the treasury underwriting anyone
+    option = {
+        name = bb.31.e
+        trigger = {
+            institution_investment_level = {
+                institution = institution_bb_market_relations
+                value >= 2
+            }
+        }
+        custom_tooltip = bb.31.e.tt
+        bb_market_jolt = { VALUE = 1 }
+        set_variable = { name = bb_market_trend value = 0.5 months = 12 }
+        add_loyalists = {
+            value = small_radicals
+            strata = middle
+        }
+    }
 }
 
 # ── bb.32: Foreign Capital Comes Calling (major, health 40–64) ─
@@ -515,5 +631,249 @@ bb.11 = {
 
     option = {
         name = bb.11.a
+    }
+}
+
+# ── bb.40: Appoint a Bank Governor ───────────────────────────
+# Triggered by bb_appoint_governor_button (and offered again by
+# bb.42 after a vacancy). Candidates are drawn live from the
+# character pool in immediate; each option is gated on its
+# candidate existing. The chosen character receives the
+# bb_bank_governor trait (the office record AND the visible
+# indicator) and their interest group gains bb_governor_patron
+# while they serve. The fallback declines to fill the seat.
+
+bb.40 = {
+    type = country_event
+    placement = ROOT
+    title = bb.40.t
+    desc  = bb.40.desc
+
+    duration = 3
+
+    event_image = {
+        video = "unspecific_signed_contract"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    immediate = {
+        bb_find_governor_candidates = yes
+    }
+
+    # The financier
+    option = {
+        name = bb.40.a
+        trigger = { exists = scope:bb_gov_cand_fin }
+        custom_tooltip = bb.40.a.tt
+        bb_seat_governor = { CANDIDATE = bb_gov_cand_fin }
+    }
+
+    # The statesman
+    option = {
+        name = bb.40.b
+        trigger = { exists = scope:bb_gov_cand_gov }
+        custom_tooltip = bb.40.b.tt
+        bb_seat_governor = { CANDIDATE = bb_gov_cand_gov }
+    }
+
+    # The scholar
+    option = {
+        name = bb.40.c
+        trigger = { exists = scope:bb_gov_cand_sch }
+        custom_tooltip = bb.40.c.tt
+        bb_seat_governor = { CANDIDATE = bb_gov_cand_sch }
+    }
+
+    # Leave the seat empty
+    option = {
+        name = bb.40.z
+        default_option = yes
+    }
+}
+
+# ── bb.42: The Governorship Falls Vacant ─────────────────────
+# Fired by bb_governor_admin_pulse when the seat was filled but
+# no living character carries the trait (death, exile). Cleanup
+# and the -2 market jolt already happened in the pulse; this
+# event informs the player and offers an immediate succession.
+
+bb.42 = {
+    type = country_event
+    placement = ROOT
+    title = bb.42.t
+    desc  = bb.42.desc
+
+    duration = 3
+
+    event_image = {
+        video = "unspecific_politicians_arguing"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    # Convene the search at once
+    option = {
+        name = bb.42.a
+        default_option = yes
+        trigger_event = { id = bb.40 popup = yes }
+    }
+
+    # Leave the seat vacant for now
+    option = {
+        name = bb.42.b
+    }
+}
+
+# ── bb.43: Scandal at the National Bank ──────────────────────
+# Rolled monthly by bb_governor_admin_pulse while the governor
+# has vice traits (bb_char_gov_vice): 4%/month, 8% if a previous
+# scandal was waved away (bb_scandal_lax), 6-month cooldown.
+# The treasury loss and market jolt land in immediate; the
+# options decide what the affair costs politically.
+
+bb.43 = {
+    type = country_event
+    placement = ROOT
+    title = bb.43.t
+    desc  = bb.43.desc
+
+    duration = 3
+
+    event_image = {
+        video = "europenorthamerica_capitalists_meeting"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    immediate = {
+        random_scope_character = {
+            limit = { has_trait = bb_bank_governor }
+            save_scope_as = bb_gov
+        }
+        add_treasury = {
+            value = gdp
+            multiply = -0.004
+            min = -1000000
+            max = -10000
+        }
+        bb_market_jolt = { VALUE = -4 }
+    }
+
+    # Cover it up: the insiders now own a piece of you
+    option = {
+        name = bb.43.a
+        custom_tooltip = bb.43.a.tt
+        add_modifier = {
+            name = bb_coverup_strain
+            months = 24
+        }
+        set_variable = {
+            name = bb_backroom_influence
+            value = 0.5
+            months = 12
+        }
+    }
+
+    # Prosecute: the seat opens, the law is seen to work
+    option = {
+        name = bb.43.b
+        default_option = yes
+        custom_tooltip = bb.43.b.tt
+        add_radicals = {
+            value = medium_radicals
+            interest_group = scope:bb_gov.interest_group
+        }
+        scope:bb_gov = {
+            remove_trait = bb_bank_governor
+        }
+        bb_clear_governor_office = yes
+        add_loyalists = {
+            value = small_radicals
+            strata = middle
+        }
+    }
+
+    # Look away: cheap today, and the vices go unchecked
+    option = {
+        name = bb.43.c
+        custom_tooltip = bb.43.c.tt
+        set_variable = bb_scandal_lax
+    }
+}
+
+# ── bb.50: National Bank Intervention ────────────────────────
+# Triggered by bb_intervene_button (visible only while Market
+# Health < 40, 24-month cooldown). Treasury costs scale with GDP;
+# every rescue feeds bb_moral_hazard, a lasting upward pull on
+# Risk Stance (investors learn that losses will be underwritten).
+# The jawboning option needs a voice the markets will heed.
+
+bb.50 = {
+    type = country_event
+    placement = ROOT
+    title = bb.50.t
+    desc  = bb.50.desc
+
+    duration = 3
+
+    event_image = {
+        video = "unspecific_signed_contract"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    # Flood the discount window
+    option = {
+        name = bb.50.a
+        custom_tooltip = bb.50.a.tt
+        add_treasury = {
+            value = gdp
+            multiply = -0.0075
+            min = -2000000
+            max = -25000
+        }
+        bb_market_jolt = { VALUE = 6 }
+        set_variable = { name = bb_market_trend value = 0.5 months = 12 }
+        bb_add_moral_hazard = { VALUE = 0.4 MONTHS = 30 }
+    }
+
+    # Targeted guarantees
+    option = {
+        name = bb.50.b
+        custom_tooltip = bb.50.b.tt
+        add_treasury = {
+            value = gdp
+            multiply = -0.004
+            min = -1000000
+            max = -10000
+        }
+        bb_market_jolt = { VALUE = 3 }
+        set_variable = { name = bb_market_trend value = 0.3 months = 12 }
+        bb_add_moral_hazard = { VALUE = 0.2 MONTHS = 24 }
+    }
+
+    # Jawbone the markets: costs nothing but requires a voice
+    option = {
+        name = bb.50.c
+        trigger = {
+            OR = {
+                ruler ?= { has_trait = charismatic }
+                any_scope_character = {
+                    has_trait = bb_bank_governor
+                    bb_char_gov_communicator = yes
+                }
+            }
+        }
+        custom_tooltip = bb.50.c.tt
+        bb_market_jolt = { VALUE = 2 }
+        set_variable = { name = bb_market_trend value = 0.2 months = 6 }
+    }
+
+    # Stand aside
+    option = {
+        name = bb.50.d
+        default_option = yes
+        custom_tooltip = bb.50.d.tt
     }
 }

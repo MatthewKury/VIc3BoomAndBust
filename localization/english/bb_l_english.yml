@@ -61,6 +61,7 @@
  bb_monopoly_tick_cooperative: "Cooperative ownership"
  bb_monopoly_tick_command: "Command economy (breaking up monopolies)"
  bb_monopoly_dissolution_active: "Monopoly dissolution case (active)"
+ bb_monopoly_chartered: "Chartered companies hold legal monopolies"
 
  # ── Antitrust Law Group ───────────────────────────────────────────────────────
  lawgroup_bb_antitrust: "Antitrust Policy"
@@ -70,13 +71,13 @@
  law_bb_free_market_desc: "The government does not interfere with market consolidation. Monopolies form and dissolve according to natural competitive pressures."
 
  law_bb_letters_of_patent: "Letters of Patent"
- law_bb_letters_of_patent_desc: "The government issues exclusive charters granting monopoly rights to favoured firms. In exchange, patent-holders supply military goods at preferential rates (−10%) and subsidise construction inputs (−5%). Accelerates market concentration, and is incompatible with laissez-faire or collectivist economic systems."
+ law_bb_letters_of_patent_desc: "The government issues exclusive charters granting monopoly rights to favoured firms, administered by the #b Bureau of Market Relations#!. Each level of investment in the Bureau cheapens military goods (−5%) and construction inputs (−3%) supplied by the patent-holders, entrenches the political strength of capitalists and aristocrats (+3% each), and accelerates the growth of #b Monopoly Power#! (+30% per level). Incompatible with laissez-faire or collectivist economic systems."
 
  law_bb_oversight_committees: "Oversight Committees"
- law_bb_oversight_committees_desc: "Standing committees of experts monitor market concentration and can intervene before dominance becomes entrenched. Maintaining these bodies consumes significant bureaucratic capacity."
+ law_bb_oversight_committees_desc: "The #b Bureau of Market Relations#! serves as a standing watchdog over market concentration. Each level of investment slows the growth of #b Monopoly Power#! (−35% at level 1, near-total suppression at full funding) and softens the blow of adverse market events (−10% to losses per level). The committees are funded through ordinary institutional upkeep."
 
  law_bb_anticompetitive_legislation: "Anticompetitive Legislation"
- law_bb_anticompetitive_legislation_desc: "Formal statutes prohibit collusion, predatory pricing, and other practices that entrench monopoly power. The government's ability to break up existing monopolies is significantly enhanced."
+ law_bb_anticompetitive_legislation_desc: "Formal statutes prohibit collusion, predatory pricing, and other practices that entrench monopoly power, enforced by the #b Bureau of Market Relations#!. Each level of investment slows #b Monopoly Power#! growth (−15%), erodes the political strength of capitalists (−5%), strengthens dissolution cases (−0.25 monthly), and imposes compliance costs on industry (−1% throughput)."
 
  # ── Adjust Fiscal Temperature Button (on je_bb_financial) ────────────────────
  bb_fiscal_temperature_button: "Adjust Fiscal Temperature"
@@ -142,51 +143,109 @@
  bb_health_trend: "Underlying market trend"
  bb_health_floor_pessimistic: "Pessimistic investors hold almost no exposure (floor)"
  bb_health_floor_cautious: "Cautious investors limit their exposure (floor)"
+ bb_health_default: "The treasury is in default"
+ bb_health_debt_heavy: "National debt nears the credit ceiling"
+ bb_health_debt_high: "Heavy national debt"
+ bb_health_debt_rising: "Rising national debt"
+ bb_health_reserves: "Healthy gold reserves"
+ bb_health_shortages: "Shortages of goods across the market"
+ bb_health_turmoil: "Turmoil in the states"
+ bb_health_legitimacy_low: "A discredited government unsettles investors"
+ bb_health_legitimacy_high: "A commanding government mandate"
+ bb_health_lead_coal: "Leading world producer of coal"
+ bb_health_lead_iron: "Leading world producer of iron"
+ bb_health_lead_steel: "Leading world producer of steel"
+ bb_health_lead_tools: "Leading world producer of tools"
+ bb_health_lead_engines: "Leading world producer of engines"
+ bb_health_lead_automobiles: "Leading world producer of automobiles"
+ bb_health_lead_oil: "Leading world producer of oil"
+ bb_health_lead_rubber: "Leading world producer of rubber"
+ bb_health_lead_fabric: "Leading world producer of fabric"
+ bb_health_lead_clothes: "Leading world producer of clothes"
+ bb_health_lead_furniture: "Leading world producer of furniture"
+ bb_health_lead_paper: "Leading world producer of paper"
+ bb_health_lead_luxury_clothes: "Leading world producer of luxury clothes"
+ bb_health_lead_porcelain: "Leading world producer of porcelain"
+ bb_health_lead_fine_art: "Leading world producer of fine art"
 
  # ── Newsfeed: Minor Market Events ─────────────────────────────────────────────
+ # Each desc ends with a one-line summary of what the event means for
+ # Financial Market Health, shown directly in the feed item.
+
  notification_bb_news_earnings_name: "Strong Earnings Season"
- notification_bb_news_earnings_desc: "The great firms report handsome profits, and the exchanges respond warmly."
- notification_bb_news_earnings_tooltip: "#header $notification_bb_news_earnings_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_earnings_desc$\n\nFinancial #b Market Health#! rises this month. The gain is larger the bolder the nation's #b Risk Stance#!."
+ notification_bb_news_earnings_desc: "The great firms report handsome profits, and the exchanges respond warmly.\n\n#b Market Health:#! §Ga solid rise§! this month."
+ notification_bb_news_earnings_tooltip: "#header $notification_bb_news_earnings_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_earnings_desc$\n\nThe magnitude of market gains and losses scales with the nation's #b Risk Stance#! — bold stances amplify losses more than gains."
 
  notification_bb_news_flotation_name: "Triumphant Share Flotation"
- notification_bb_news_flotation_desc: "A new joint-stock venture is oversubscribed within hours of opening its books."
- notification_bb_news_flotation_tooltip: "#header $notification_bb_news_flotation_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_flotation_desc$\n\nFinancial #b Market Health#! rises sharply this month. The gain is larger the bolder the nation's #b Risk Stance#!."
+ notification_bb_news_flotation_desc: "A new joint-stock venture is oversubscribed within hours of opening its books.\n\n#b Market Health:#! §Ga sharp rise§! this month."
+ notification_bb_news_flotation_tooltip: "#header $notification_bb_news_flotation_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_flotation_desc$\n\nThe magnitude of market gains and losses scales with the nation's #b Risk Stance#! — bold stances amplify losses more than gains."
 
  notification_bb_news_foreign_capital_name: "Foreign Capital Trickles In"
- notification_bb_news_foreign_capital_desc: "Overseas financiers are quietly taking positions in our markets. Observers expect the inflow to continue for some months."
- notification_bb_news_foreign_capital_tooltip: "#header $notification_bb_news_foreign_capital_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_foreign_capital_desc$\n\nFinancial #b Market Health#! rises, and an #b upward trend#! will lift the market for several months."
+ notification_bb_news_foreign_capital_desc: "Overseas financiers are quietly taking positions in our markets, and the inflow is expected to continue.\n\n#b Market Health:#! §Ga small rise§! now, and §ga rising trend§! for the months ahead."
+ notification_bb_news_foreign_capital_tooltip: "#header $notification_bb_news_foreign_capital_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_foreign_capital_desc$\n\nThe magnitude of market gains and losses scales with the nation's #b Risk Stance#! — bold stances amplify losses more than gains."
 
  notification_bb_news_credit_expansion_name: "Credit Flows Freely"
- notification_bb_news_credit_expansion_desc: "Lenders are extending credit on remarkably generous terms. The exchanges cheer — though sober voices warn that today's easy money will be tomorrow's reckoning."
- notification_bb_news_credit_expansion_tooltip: "#header $notification_bb_news_credit_expansion_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_credit_expansion_desc$\n\nFinancial #b Market Health#! rises sharply now, but a #b downward trend#! will weigh on the market for months to come."
+ notification_bb_news_credit_expansion_desc: "Lenders are extending credit on remarkably generous terms. The exchanges cheer — though sober voices warn that today's easy money will be tomorrow's reckoning.\n\n#b Market Health:#! §Ga sharp rise§! now, but §Ra falling trend§! for the months ahead."
+ notification_bb_news_credit_expansion_tooltip: "#header $notification_bb_news_credit_expansion_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_credit_expansion_desc$\n\nThe magnitude of market gains and losses scales with the nation's #b Risk Stance#! — bold stances amplify losses more than gains."
 
  notification_bb_news_confidence_name: "Confidence Builds"
- notification_bb_news_confidence_desc: "Little has changed on the exchanges themselves, but merchants and financiers alike speak of brighter months ahead."
- notification_bb_news_confidence_tooltip: "#header $notification_bb_news_confidence_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_confidence_desc$\n\nA modest gain now, and an #b upward trend#! will lift Financial #b Market Health#! for several months."
+ notification_bb_news_confidence_desc: "Little has changed on the exchanges themselves, but merchants and financiers alike speak of brighter months ahead.\n\n#b Market Health:#! §Ga slight rise§! now, and §ga strong rising trend§! for the months ahead."
+ notification_bb_news_confidence_tooltip: "#header $notification_bb_news_confidence_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_confidence_desc$\n\nThe magnitude of market gains and losses scales with the nation's #b Risk Stance#! — bold stances amplify losses more than gains."
+
+ notification_bb_news_bureau_charter_name: "Bureau Charter Expanded"
+ notification_bb_news_bureau_charter_desc: "New learning has widened the mandate of the #b Bureau of Market Relations#!. Its maximum investment level has increased — check the institution panel to fund it deeper."
+ notification_bb_news_bureau_charter_tooltip: "#header $notification_bb_news_bureau_charter_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_bureau_charter_desc$"
 
  notification_bb_news_bank_failure_name: "Provincial Bank Fails"
- notification_bb_news_bank_failure_desc: "A regional lender has shuttered its doors, and depositors crowd the street outside demanding their savings."
- notification_bb_news_bank_failure_tooltip: "#header $notification_bb_news_bank_failure_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_bank_failure_desc$\n\nFinancial #b Market Health#! falls sharply this month. The loss is far larger the bolder the nation's #b Risk Stance#!."
+ notification_bb_news_bank_failure_desc: "A regional lender has shuttered its doors, and depositors crowd the street outside demanding their savings.\n\n#b Market Health:#! §Ra sharp fall§! this month."
+ notification_bb_news_bank_failure_tooltip: "#header $notification_bb_news_bank_failure_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_bank_failure_desc$\n\nThe magnitude of market gains and losses scales with the nation's #b Risk Stance#! — bold stances amplify losses more than gains."
 
  notification_bb_news_commodity_glut_name: "Commodity Glut"
- notification_bb_news_commodity_glut_desc: "Warehouses overflow and prices sag as key goods find no buyers."
- notification_bb_news_commodity_glut_tooltip: "#header $notification_bb_news_commodity_glut_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_commodity_glut_desc$\n\nFinancial #b Market Health#! falls this month. The loss is far larger the bolder the nation's #b Risk Stance#!."
+ notification_bb_news_commodity_glut_desc: "Warehouses overflow and prices sag as key goods find no buyers.\n\n#b Market Health:#! §Ra moderate fall§! this month."
+ notification_bb_news_commodity_glut_tooltip: "#header $notification_bb_news_commodity_glut_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_commodity_glut_desc$\n\nThe magnitude of market gains and losses scales with the nation's #b Risk Stance#! — bold stances amplify losses more than gains."
 
  notification_bb_news_fraud_scandal_name: "Fraud at a Great House"
- notification_bb_news_fraud_scandal_desc: "A celebrated financier stands exposed as a swindler. Confidence in the exchanges is shaken, and the whispers will not soon die down."
- notification_bb_news_fraud_scandal_tooltip: "#header $notification_bb_news_fraud_scandal_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_fraud_scandal_desc$\n\nFinancial #b Market Health#! falls now, and a #b downward trend#! will weigh on the market for months."
+ notification_bb_news_fraud_scandal_desc: "A celebrated financier stands exposed as a swindler. Confidence in the exchanges is shaken, and the whispers will not soon die down.\n\n#b Market Health:#! §Ra heavy fall§! now, and §Ra falling trend§! for the months ahead."
+ notification_bb_news_fraud_scandal_tooltip: "#header $notification_bb_news_fraud_scandal_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_fraud_scandal_desc$\n\nThe magnitude of market gains and losses scales with the nation's #b Risk Stance#! — bold stances amplify losses more than gains."
 
  notification_bb_news_foreign_wobble_name: "Tremors in Foreign Markets"
- notification_bb_news_foreign_wobble_desc: "Unsettling news from exchanges abroad has made our own investors briefly hesitant."
- notification_bb_news_foreign_wobble_tooltip: "#header $notification_bb_news_foreign_wobble_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_foreign_wobble_desc$\n\nFinancial #b Market Health#! dips this month. The loss is larger the bolder the nation's #b Risk Stance#!."
+ notification_bb_news_foreign_wobble_desc: "Unsettling news from exchanges abroad has made our own investors briefly hesitant.\n\n#b Market Health:#! §Ra small dip§! this month."
+ notification_bb_news_foreign_wobble_tooltip: "#header $notification_bb_news_foreign_wobble_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_foreign_wobble_desc$\n\nThe magnitude of market gains and losses scales with the nation's #b Risk Stance#! — bold stances amplify losses more than gains."
 
  notification_bb_news_credit_tightening_name: "Lenders Tighten Their Books"
- notification_bb_news_credit_tightening_desc: "Credit has grown dear and speculative ventures are being called in. Painful — but the survivors will stand on firmer ground."
- notification_bb_news_credit_tightening_tooltip: "#header $notification_bb_news_credit_tightening_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_credit_tightening_desc$\n\nFinancial #b Market Health#! falls now, but an #b upward trend#! will support the market for months to come."
+ notification_bb_news_credit_tightening_desc: "Credit has grown dear and speculative ventures are being called in. Painful — but the survivors will stand on firmer ground.\n\n#b Market Health:#! §Ra moderate fall§! now, but §ga rising trend§! for the months ahead."
+ notification_bb_news_credit_tightening_tooltip: "#header $notification_bb_news_credit_tightening_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_credit_tightening_desc$\n\nThe magnitude of market gains and losses scales with the nation's #b Risk Stance#! — bold stances amplify losses more than gains."
+
+ # ── Bureau of Market Relations Institution ────────────────────────────────────
+ institution_bb_market_relations: "Bureau of Market Relations"
+ institution_bb_market_relations_desc: "The government office charged with managing the state's relationship to the nation's markets. Its character depends entirely on the governing Antitrust Policy: a patent office under Letters of Patent, a watchdog under Oversight Committees, an enforcement agency under Anticompetitive Legislation. Its maximum investment level grows with society technologies: Stock Exchange (1), Corporate Charters (2), Philosophical Pragmatism (3), and Macroeconomics (5)."
+
+ # ── Bureau Max Investment Modifier Type ───────────────────────────────────────
+ country_institution_bb_market_relations_max_investment_add: "Max $institution_bb_market_relations$ [concept_institution] Investment"
+ country_institution_bb_market_relations_max_investment_add_desc: "A bonus or penalty to the maximum investment level of the $institution_bb_market_relations$ [concept_institution]"
+
+ # ── Bureau Investment Cap Charters (from society techs) ──────────────────────
+ bb_market_relations_charter_1: "Bureau Charter: Corporate Charters"
+ bb_market_relations_charter_1_desc: "Standardised incorporation gives the Bureau of Market Relations legal handles on the firms it oversees, permitting deeper investment."
+ bb_market_relations_charter_2: "Bureau Charter: Philosophical Pragmatism"
+ bb_market_relations_charter_2_desc: "A philosophy of practical consequences teaches the Bureau of Market Relations to judge markets by results rather than doctrine, permitting deeper investment."
+ bb_market_relations_charter_3: "Bureau Charter: Macroeconomics"
+ bb_market_relations_charter_3_desc: "Economic theory at last describes the whole. The Bureau of Market Relations may be invested to its fullest extent."
 
  # ── Bailout Burden Modifier ───────────────────────────────────────────────────
  bb_bailout_burden: "Bailout Burden"
  bb_bailout_burden_desc: "The treasury borrowed heavily to guarantee bank deposits during the panic. Servicing that debt keeps the state's borrowing costs elevated."
+
+ # ── bb.1: The Age of Capital (JE launch + inaugural governor selection) ───────
+ bb.1.t: "The Age of Capital"
+ bb.1.desc: "A new force has taken its seat alongside crown, church, and army: the market. In the coffee houses and counting rooms of the capital, fortunes are conjured from paper and confidence — and can vanish by the same magic. From this day forward the government will keep a standing watch on three currents that will shape the nation's fate: the #b health of the financial markets#!, the #b risk appetite of investors#!, and the slow gathering of #b monopoly power#!.\n\nThe first duty of this new age is to name a #b Governor of the National Bank#!. The governor's skill will steer the markets month after month, their temperament will set the mood of investors, and their vices will be the government's problem. Only figures aligned with the governing coalition are under consideration — inspect each candidate before deciding."
+ bb.1.a: "Appoint the financier, [SCOPE.sCharacter('bb_gov_cand_fin').GetFullName]."
+ bb.1.a.tt: "A magnate takes the chair. Their business acumen — and their appetites — now steer the #b Financial Market Health#! and #b Risk Stance#! bars each month, and their interest group gains political strength while they serve. Hover their name to inspect their traits."
+ bb.1.b: "Appoint the statesman, [SCOPE.sCharacter('bb_gov_cand_gov').GetFullName]."
+ bb.1.b.tt: "A leader from the governing coalition takes the chair. Their character now steers the #b Financial Market Health#! and #b Risk Stance#! bars each month, and their interest group gains political strength while they serve. Hover their name to inspect their traits."
+ bb.1.c: "Appoint the scholar, [SCOPE.sCharacter('bb_gov_cand_sch').GetFullName]."
+ bb.1.c.tt: "A studious mind takes the chair. Their learning now steers the #b Financial Market Health#! and #b Risk Stance#! bars each month, and their interest group gains political strength while they serve. Hover their name to inspect their traits."
+ bb.1.z: "The Bank can open without a governor for now."
 
  # ── bb.30: Mania on the Exchange ──────────────────────────────────────────────
  bb.30.t: "Mania on the Exchange"
@@ -211,6 +270,8 @@
  bb.31.c.tt: "The Trade Unions demand justice. #b Market Health#! slips a little now but gains a #b solid upward trend#!. Workers are grateful; capitalists seethe."
  bb.31.d: "Return to hard money and sound banking."
  bb.31.d.tt: "The Landowners restore gold-backed discipline. #b Market Health#! dips now, but a #b long, steady upward trend#! follows for #b 18 months#!. The aristocracy approves."
+ bb.31.e: "Let the Bureau coordinate an orderly resolution."
+ bb.31.e.tt: "The #b Bureau of Market Relations#! arranges mergers, receiverships, and quiet guarantees among the banks themselves. #b Market Health#! steadies #b now#! and gains a #b strong upward trend#! for #b 12 months#! — with no burden on the treasury. The middle classes are reassured.\n\nAvailable because the Bureau is invested at #b level 2#! or higher."
 
  # ── bb.32: Foreign Capital Comes Calling ──────────────────────────────────────
  bb.32.t: "Foreign Capital Comes Calling"
@@ -223,6 +284,97 @@
  bb.32.c.tt: "The Petty Bourgeoisie writes the terms. #b Market Health#! dips slightly now but gains a #b modest upward trend#! for #b 12 months#!, and the shopkeepers are pleased."
  bb.32.d: "Demand their expertise alongside their capital."
  bb.32.d.tt: "The Intelligentsia negotiates for knowledge as well as money. #b Market Health#! rises now and gains a #b strong upward trend#! for #b 10 months#!."
+
+ # ── Bank Governor Traits ──────────────────────────────────────────────────────
+ bb_bank_governor: "Governor of the National Bank"
+ bb_bank_governor_desc: "This character directs the nation's central lending institution. Their acumen steers the #b health of the financial markets#!, their temperament sets the mood of investors, and their vices — if they have any — are a scandal waiting to surface."
+ bb_lion_of_the_bourse: "Lion of the Bourse"
+ bb_lion_of_the_bourse_desc: "This character presided over two unbroken years of booming markets as Governor of the National Bank. Their name alone steadies the exchanges: while they hold the governorship, markets drift upward on reputation."
+
+ # ── Governor & Intervention Modifiers ─────────────────────────────────────────
+ bb_governor_patron: "Controls the National Bank"
+ bb_governor_patron_desc: "This interest group's member holds the Governorship of the National Bank, and the nation's money answers to their circle."
+
+ bb_governor_dismissal_backlash: "Governor Sacked"
+ bb_governor_dismissal_backlash_desc: "The government dismissed the Governor of the National Bank without ceremony. Questions are asked in every salon, and spending political capital to answer them drains authority."
+
+ bb_exchange_closed: "Exchange Suspended"
+ bb_exchange_closed_desc: "The government has declared a market holiday. No shares change hands, no panics spread — and no capital moves. Commerce chokes while the doors stay shut, and the moneyed classes sit on their funds."
+
+ bb_coverup_strain: "Buried Scandal"
+ bb_coverup_strain_desc: "The government hushed up a scandal at the National Bank. The men who kept the secret expect to be paid in favours, and favours cost authority."
+
+ # ── Governor & Intervention Buttons (on je_bb_financial) ──────────────────────
+ bb_appoint_governor_button: "Appoint a Bank Governor"
+ bb_appoint_governor_button_desc: "Seat a governor at the National Bank. Their acumen will steer the health of the markets, their temperament will set the mood of investors, and their appetites — if they have any — will be your problem. The appointee carries the office visibly as a character trait."
+ bb_dismiss_governor_button: "Dismiss the Governor"
+ bb_dismiss_governor_button_desc: "Remove the sitting Governor of the National Bank from office. Their interest group will take the insult personally, and the abrupt dismissal will cost the government authority for a year — unless the government has been reformed or re-elected within the past 12 months, in which case a new administration naming its own banker is ordinary housekeeping: no public anger, only a brief administrative backlash."
+ bb_intervene_button: "National Bank Intervention"
+ bb_intervene_button_desc: "Direct the National Bank to act as lender of last resort while the markets falter. Treasury money can steady the exchanges — but every rescue teaches investors that their losses will be underwritten, heating the nation's #b Risk Stance#! for years. Available once every 24 months, and only while #b Market Health#! is below 40."
+ bb_market_holiday_button: "Suspend the Exchange"
+ bb_market_holiday_button_desc: "Declare a market holiday and bar the exchange doors for four months. No shocks can strike a market that is not trading — but the underlying trend keeps running, commerce suffers while the doors are shut, and the capitalists will be furious. Available once every 36 months, and only while #b Market Health#! is below 20 (Crashing)."
+
+ # ── Governor Bar Row Tooltips ────────────────────────────────────────────────
+ # NOTE: embedded in PROGRESS_BAR_BREAKDOWN — no apostrophes allowed here.
+ bb_health_governor_acumen: "Stewardship of the Bank Governor"
+ bb_risk_governor_heats: "Speculative temperament of the Bank Governor"
+ bb_risk_governor_cools: "Prudent temperament of the Bank Governor"
+ bb_risk_moral_hazard: "Moral hazard from National Bank rescues"
+ bb_risk_exuberance_growing: "Confidence grows with the healthy market"
+ bb_risk_exuberance_booming: "Booming markets breed overconfidence"
+ bb_monopoly_backroom: "Backroom favours from a buried scandal"
+
+ # ── bb.40: Appoint a Bank Governor ────────────────────────────────────────────
+ bb.40.t: "The Governorship of the National Bank"
+ bb.40.desc: "The National Bank requires a hand on the tiller, and the capital is thick with candidates — though only figures aligned with the governing coalition are under consideration. Choose carefully: the governor's #b skill#! will quietly steer the health of the markets month after month, their #b temperament#! will heat or cool the appetite of investors, and any #b vices#! they bring to the office have a way of surfacing at the worst possible moment. Inspect each candidate before deciding — their traits are their record."
+ bb.40.a: "Appoint the financier, [SCOPE.sCharacter('bb_gov_cand_fin').GetFullName]."
+ bb.40.a.tt: "A magnate takes the chair. Their business acumen — and their appetites — now steer the #b Financial Market Health#! and #b Risk Stance#! bars each month, and their interest group gains political strength while they serve. Hover their name to inspect their traits."
+ bb.40.b: "Appoint the statesman, [SCOPE.sCharacter('bb_gov_cand_gov').GetFullName]."
+ bb.40.b.tt: "A leader from the governing coalition takes the chair. Their character now steers the #b Financial Market Health#! and #b Risk Stance#! bars each month, and their interest group gains political strength while they serve. Hover their name to inspect their traits."
+ bb.40.c: "Appoint the scholar, [SCOPE.sCharacter('bb_gov_cand_sch').GetFullName]."
+ bb.40.c.tt: "A studious mind takes the chair. Their learning now steers the #b Financial Market Health#! and #b Risk Stance#! bars each month, and their interest group gains political strength while they serve. Hover their name to inspect their traits."
+ bb.40.z: "The seat can stay empty a while longer."
+
+ # ── bb.42: The Governorship Falls Vacant ──────────────────────────────────────
+ bb.42.t: "The Governorship Falls Vacant"
+ bb.42.desc: "The Governor of the National Bank is gone — the chair stands empty, the ledgers unsigned. Markets loathe nothing so much as uncertainty at the top: the exchanges have already wobbled on the news. A successor can be found at once, or the seat can stand vacant while the government attends to other things."
+ bb.42.a: "Convene the search for a successor at once."
+ bb.42.b: "The seat can stand vacant for now."
+
+ # ── bb.43: Scandal at the National Bank ───────────────────────────────────────
+ bb.43.t: "Scandal at the National Bank"
+ bb.43.desc: "It is in the morning papers, and by now it is in the evening ones too: Governor [SCOPE.sCharacter('bb_gov').GetFullName] has been living considerably beyond the dignity of the office, and the money trail runs straight through the National Bank's books. The treasury has quietly absorbed the immediate losses and the exchanges have taken fright. What remains is the question of what the government intends to do about its governor."
+ bb.43.a: "Bury it. The Bank must appear unimpeachable."
+ bb.43.a.tt: "The scandal disappears — for a price. The men who kept the secret expect favours: §Rauthority is drained for 24 months§! and #b Monopoly Power#! creeps upward for a year as they trade on what they know. The governor remains in office, vices intact."
+ bb.43.b: "Prosecute. No one is above the law."
+ bb.43.b.tt: "The governor is removed and tried. Their interest group is furious, but the public is reassured that the law reaches even the Bank — the middle classes gain loyalists. The governorship falls vacant."
+ bb.43.c: "A private reprimand will suffice."
+ bb.43.c.tt: "Nothing is paid today — but the Bank learns that nothing will ever be paid. Scandals become §Rpermanently twice as likely§! under governors with vices."
+
+ # ── bb.50: National Bank Intervention ─────────────────────────────────────────
+ bb.50.t: "Lender of Last Resort"
+ bb.50.desc: "The markets are faltering and the discount window is crowded with men holding paper no one else will touch. The National Bank can act — with the treasury standing behind it — but every banker in the capital is watching to see whether losses, once made, are ever truly borne by those who made them."
+ bb.50.a: "Flood the discount window. Save them all."
+ bb.50.a.tt: "A massive treasury outlay (scaled to GDP). #b Market Health#! surges now and gains a §Gstrong upward trend§! for 12 months — but investors learn the lesson well: #b Risk Stance#! is pulled §Rstrongly upward for 30 months§! (moral hazard)."
+ bb.50.b: "Guarantee only the sound institutions."
+ bb.50.b.tt: "A moderate treasury outlay (scaled to GDP). #b Market Health#! steadies now and gains an §Gupward trend§! for 12 months, with a §Rmilder moral hazard§! pull on #b Risk Stance#! for 24 months."
+ bb.50.c: "Say a few well-chosen words. Spend nothing."
+ bb.50.c.tt: "Confidence is a currency too. #b Market Health#! firms slightly with a §gbrief upward trend§! — no treasury cost, no moral hazard.\n\nAvailable because a voice the markets heed — a #b charismatic ruler#! or a #b communicator governor#! — speaks for the Bank."
+ bb.50.d: "The Bank stands aside."
+ bb.50.d.tt: "No rescue, no cost, no lesson taught. The emergency session still counts against the 24-month cooldown."
+
+ # ── Newsfeed: Governor & Holiday ──────────────────────────────────────────────
+ notification_bb_news_governor_appointed_name: "A New Hand at the National Bank"
+ notification_bb_news_governor_appointed_desc: "A new Governor of the National Bank has been seated. Their acumen and temperament will steer the markets for as long as they hold the office — look for the governor trait on their character."
+ notification_bb_news_governor_appointed_tooltip: "#header $notification_bb_news_governor_appointed_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_governor_appointed_desc$"
+
+ notification_bb_news_lion_name: "Lion of the Bourse"
+ notification_bb_news_lion_desc: "Two unbroken years of booming markets have made the Governor of the National Bank a legend of the exchanges. The governor permanently gains the #b Lion of the Bourse#! trait: markets drift upward on reputation alone while they remain in office."
+ notification_bb_news_lion_tooltip: "#header $notification_bb_news_lion_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_lion_desc$"
+
+ notification_bb_news_market_holiday_name: "The Exchange Is Dark"
+ notification_bb_news_market_holiday_desc: "By government order the exchange doors are barred for four months. No market shocks can land while trading is suspended — but the underlying trend keeps running, and commerce pays the toll.\n\n#b Market Health:#! shielded from events until the holiday ends."
+ notification_bb_news_market_holiday_tooltip: "#header $notification_bb_news_market_holiday_name$#!\n$TOOLTIP_DELIMITER$\n$notification_bb_news_market_holiday_desc$"
 
  # ── bb.11: Outcome Notification Event ────────────────────────────────────────
  bb.11.t: "Antitrust Case Filed"

@@ -1,1 +1,26 @@
-﻿
+﻿# ============================================================
+#  Boom & Bust — On-Actions
+#
+#  Only ever hook vanilla on_actions with events = { } lists —
+#  they merge additively across mods. effect = { } blocks
+#  CONFLICT (last-loaded file wins).
+# ============================================================
+
+# Apply Bureau of Market Relations cap charters the moment a
+# qualifying society tech finishes, instead of waiting for the
+# next monthly pulse.
+on_acquired_technology = {
+    events = { bb.2 }
+}
+
+# A freshly settled government carries a mandate: for 12 months
+# the Bank Governor can be replaced without public backlash
+# (bb.3 sets bb_fresh_mandate, read by the dismiss button).
+# Root = Country for both hooks.
+on_government_reformed = {
+    events = { bb.3 }
+}
+
+on_election_campaign_end = {
+    events = { bb.3 }
+}

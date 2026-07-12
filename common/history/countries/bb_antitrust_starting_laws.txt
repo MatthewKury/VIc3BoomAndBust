@@ -1,0 +1,80 @@
+﻿# ================================================================
+#  Boom & Bust — starting antitrust laws (1836)
+#
+#  Nations whose economies still ran on state-chartered monopoly
+#  companies in 1836 begin on law_bb_letters_of_patent (and thus
+#  with the Bureau of Market Relations acting as a patent office).
+#  Everyone else defaults to law_bb_free_market.
+#
+#  Only countries verified to start with stock_exchange (the law's
+#  unlocking tech) are listed: GBR/PRU are starting-tech tier 1 and
+#  BIC/NET/AUS/DEN tier 2 (both tiers get add_era_researched =
+#  era_1, which includes stock_exchange); RUS/SPA/SPC/POR get an
+#  explicit add_technology_researched = stock_exchange in their
+#  vanilla history files. Two Sicilies (sulphur monopoly) and the
+#  Ottomans (concession monopolies) would fit thematically but
+#  lack the tech at start, so they are excluded.
+#
+#  History country blocks are additive across files, so this file
+#  safely coexists with vanilla's per-country history.
+# ================================================================
+
+COUNTRIES = {
+	# Great Britain — Hudson's Bay Company, chartered colonial
+	# companies, and the Bank of England's charter privileges.
+	c:GBR ?= {
+		activate_law = law_type:law_bb_letters_of_patent
+	}
+
+	# British East India Company — IS a chartered monopoly; its
+	# royal charter is the whole basis of its rule in India.
+	c:BIC ?= {
+		activate_law = law_type:law_bb_letters_of_patent
+	}
+
+	# Netherlands — the Nederlandsche Handel-Maatschappij holds a
+	# royal monopoly on East Indies trade (cultuurstelsel).
+	c:NET ?= {
+		activate_law = law_type:law_bb_letters_of_patent
+	}
+
+	# Austria — Habsburg state monopolies on tobacco and salt.
+	c:AUS ?= {
+		activate_law = law_type:law_bb_letters_of_patent
+	}
+
+	# Prussia — the Preussische Seehandlung, a crown trading and
+	# banking monopoly.
+	c:PRU ?= {
+		activate_law = law_type:law_bb_letters_of_patent
+	}
+
+	# Denmark — royal trade monopolies over Greenland, Iceland and
+	# the Faroes.
+	c:DEN ?= {
+		activate_law = law_type:law_bb_letters_of_patent
+	}
+
+	# Russia — the Russian-American Company's chartered monopoly
+	# over Alaska and the Pacific trade.
+	c:RUS ?= {
+		activate_law = law_type:law_bb_letters_of_patent
+	}
+
+	# Spain — royal tobacco and colonial trade monopolies.
+	c:SPA ?= {
+		activate_law = law_type:law_bb_letters_of_patent
+	}
+
+	# Carlist Spain — the same royal monopolies, claimed by the
+	# more traditionalist court.
+	c:SPC ?= {
+		activate_law = law_type:law_bb_letters_of_patent
+	}
+
+	# Portugal — royal monopoly companies (port wine, colonial
+	# trade).
+	c:POR ?= {
+		activate_law = law_type:law_bb_letters_of_patent
+	}
+}

@@ -1,21 +1,38 @@
 ﻿# ================================================================
 #  Boom & Bust — Antitrust Law Group
 #
-#  lawgroup_bb_antitrust contains four laws that control
-#  whether the government suppresses or encourages monopoly
-#  formation, and unlocks the Dissolve Monopoly decision.
+#  lawgroup_bb_antitrust controls whether the government
+#  suppresses or encourages monopoly formation. All laws except
+#  Free Market establish the Bureau of Market Relations
+#  (institution_bb_market_relations); the Bureau's per-level
+#  effects depend entirely on which law governs it.
 #
-#  Monthly_progress multipliers (applied in bb_progress_bars.txt):
-#    law_bb_letters_of_patent       x1.5  (grants charters)
-#    law_bb_free_market             x1.0  (neutral -- no law check)
-#    law_bb_anticompetitive         x0.8  (mild restraint)
-#    law_bb_oversight_committees    x0.5  (strong restraint)
+#  Max investment is NOT law-driven — society technologies raise
+#  the cap (tech shadows in 00_bb_society_overrides.txt):
+#  stock_exchange -> 1, corporate_charters -> 2,
+#  philosophical_pragmatism -> 3, macroeconomics -> 5.
+#
+#  Monopoly Power bar multipliers scale with Bureau level
+#  (applied in bb_progress_bars.txt):
+#    law_bb_letters_of_patent    x1.3  -> x2.5   (L1 -> L5)
+#    law_bb_free_market          x1.0   (no institution)
+#    law_bb_anticompetitive      x0.85 -> x0.25  (L1 -> L5)
+#    law_bb_oversight_committees x0.65 -> x0.05  (L1 -> L5)
 # ================================================================
 
 # NOTE: lawgroup_bb_antitrust is defined in common/law_groups/bb_law_groups.txt
+#
+# AI countries CAN enact these laws. Desire comes mostly from the
+# IG ideology stances added in
+# common/ideologies/00_bb_ideology_overrides.txt; the
+# ai_enact_weight_modifier blocks below only add modest thematic
+# nudges (100-150, vs vanilla's 750-1000 for urgent transitions)
+# plus the standard petition hook, so the AI treats antitrust as
+# quiet-stretch politics rather than a priority.
 
 # -- Free Market -----------------------------------------------
-# Starting option. No modifier effect; bar ticks at base rate.
+# Starting option. No Bureau: switching here dismantles the
+# institution. Bar ticks at base rate; market events unmodified.
 
 law_bb_free_market = {
     group = lawgroup_bb_antitrust
@@ -25,14 +42,25 @@ law_bb_free_market = {
     on_activate = {}
     modifier    = {}
 
-    ai_enact_weight_modifier = { value = 0 }
+    ai_enact_weight_modifier = {
+        value = 0
+
+        if = {
+            limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+            add = 750
+        }
+    }
 }
 
 # -- Letters of Patent -----------------------------------------
-# Starting option. The government grants exclusive charters,
-# accelerating monopoly formation by 50%.
-# Monopolists supply military goods at preferential rates (-10%)
-# and subsidise construction inputs (-5%).
+# Requires: Stock Exchange (era 1) — chartered monopolies need a
+# market to trade their paper on, and the same tech grants the
+# Bureau its first investment level.
+# The Bureau serves the charter-holders as a patent office: each
+# investment level cheapens the goods the chartered monopolies
+# supply, entrenches the political strength of capitalists and
+# aristocrats (+3% each), and accelerates Monopoly Power growth
+# (+30% per level, applied in bb_progress_bars.txt).
 # Cannot be enacted under laws that oppose state-backed monopolies.
 
 law_bb_letters_of_patent = {
@@ -40,27 +68,58 @@ law_bb_letters_of_patent = {
     icon  = "gfx/interface/icons/law_icons/interventionism.dds"
     progressiveness = 0
 
+    unlocking_technologies = { stock_exchange }
+
     disallowing_laws = {
         law_laissez_faire
         law_cooperative_ownership
         law_command_economy
     }
 
-    on_activate = {}
-
-    modifier = {
-        country_military_goods_cost_mult      = -0.10
-        country_construction_goods_cost_mult  = -0.05
+    institution = institution_bb_market_relations
+    institution_modifier = {
+        country_military_goods_cost_mult      = -0.05
+        country_construction_goods_cost_mult  = -0.03
+        country_capitalists_pol_str_mult      = 0.03
+        country_aristocrats_pol_str_mult      = 0.03
     }
 
-    ai_enact_weight_modifier = { value = 0 }
+    on_activate = {}
+    modifier    = {}
+
+    ai_enact_weight_modifier = {
+        value = 0
+
+        if = {
+            limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+            add = 750
+        }
+
+        # Early-game aristocratic move: powerful Landowners in
+        # government reach for crown charters before the age of
+        # professional oversight arrives.
+        if = {
+            limit = {
+                has_law_or_variant = law_type:law_bb_free_market
+                ig:ig_landowners = {
+                    is_powerful = yes
+                    is_in_government = yes
+                }
+                NOT = { has_technology_researched = philosophical_pragmatism }
+            }
+            add = 100
+        }
+    }
 }
 
 # -- Oversight Committees --------------------------------------
 # Requires: Philosophical Pragmatism.
-# Standing committees monitor market concentration,
-# halving the monthly rise of the Monopoly Power bar.
-# Maintaining the committees consumes bureaucratic resources.
+# The Bureau acts as a watchdog: each investment level slows
+# Monopoly Power growth (x0.65 at L1 down to x0.05 at L5) and
+# dampens NEGATIVE market-event shocks by 10% (both scripted —
+# bb_progress_bars.txt and bb_roll_market_event). The old flat
+# bureaucracy penalty is replaced by the Bureau's natural
+# institution upkeep.
 
 law_bb_oversight_committees = {
     group = lawgroup_bb_antitrust
@@ -69,20 +128,42 @@ law_bb_oversight_committees = {
 
     unlocking_technologies = { philosophical_pragmatism }
 
+    institution = institution_bb_market_relations
+    institution_modifier = {}
+
     on_activate = {}
+    modifier    = {}
 
-    modifier = {
-        country_bureaucracy_mult = -0.20
+    ai_enact_weight_modifier = {
+        value = 0
+
+        if = {
+            limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+            add = 750
+        }
+
+        # The respectable modern choice: educated governments adopt
+        # oversight, and any modern state still on crown charters
+        # wants to ditch them. (Tech gate is unlocking_technologies.)
+        if = {
+            limit = {
+                OR = {
+                    ig:ig_intelligentsia = { is_in_government = yes }
+                    has_law_or_variant = law_type:law_bb_letters_of_patent
+                }
+            }
+            add = 150
+        }
     }
-
-    ai_enact_weight_modifier = { value = 0 }
 }
 
 # -- Anticompetitive Legislation --------------------------------
 # Requires: Central Planning.
-# Formal statutes curb monopolistic practices, reducing
-# monthly bar growth by 20% and strengthening the
-# Dissolve Monopoly decision's effectiveness.
+# The Bureau becomes an enforcement agency. Per investment level:
+# capitalists lose 5% political strength, compliance costs shave
+# 1% off building throughput, Monopoly Power growth slows (x0.85
+# at L1 to x0.25 at L5, in bb_progress_bars.txt), and dissolution
+# cases gain -0.25 strength (bb_apply_dissolution_effect).
 
 law_bb_anticompetitive_legislation = {
     group = lawgroup_bb_antitrust
@@ -91,8 +172,33 @@ law_bb_anticompetitive_legislation = {
 
     unlocking_technologies = { central_planning }
 
+    institution = institution_bb_market_relations
+    institution_modifier = {
+        country_capitalists_pol_str_mult = -0.05
+        building_throughput_add          = -0.01
+    }
+
     on_activate = {}
     modifier    = {}
 
-    ai_enact_weight_modifier = { value = 0 }
+    ai_enact_weight_modifier = {
+        value = 0
+
+        if = {
+            limit = { ai_has_enact_weight_modifier_journal_entries = yes }
+            add = 750
+        }
+
+        # Labor governments bust trusts. (Tech gate is
+        # unlocking_technologies: central_planning.)
+        if = {
+            limit = {
+                ig:ig_trade_unions = {
+                    is_powerful = yes
+                    is_in_government = yes
+                }
+            }
+            add = 150
+        }
+    }
 }
