@@ -5,9 +5,10 @@
 #    Visible when the Monopoly Power bar reads >= 40 — checked
 #    directly on the bar, so there is no monthly-pulse lag.
 #    Greyed out (possible) while a dissolution case is running
-#    or no interest group is in government.
-#    Costs decaying authority over 12 months, then opens bb.10
-#    for IG-leader selection.
+#    or no Bank Governor is seated — the Governor always
+#    champions the case; there is no player choice of IG.
+#    Costs decaying authority over 12 months, then opens bb.10,
+#    which confirms the Governor as champion.
 #    ai_chance base 0: the JE is active for every country, so the
 #    AI must be explicitly barred from pressing the button.
 # ================================================================
@@ -50,9 +51,7 @@ bb_dissolve_monopoly_button = {
 
     possible = {
         NOT = { has_variable = bb_case_strength }
-        any_interest_group = {
-            is_in_government = yes
-        }
+        any_scope_character = { has_trait = bb_bank_governor }
     }
 
     ai_chance = {
@@ -100,6 +99,13 @@ bb_appoint_governor_button = {
 # (bb_fresh_mandate, set by bb.3 for 12 months): a new government
 # naming its own banker is ordinary housekeeping, so the change
 # costs only a brief administrative backlash and no radicals.
+#
+# Backlash duration also scales with the Bureaucracy law (added
+# 2026-07-22): a hereditary appointee is family, not an employee
+# (24 months, extra aristocrat radicals); a career civil servant
+# has tenure protections (18 months, extra intelligentsia radicals
+# at the norm being breached); an ordinary political appointee is
+# the 12-month baseline.
 
 bb_dismiss_governor_button = {
     name = "bb_dismiss_governor_button"
@@ -123,6 +129,38 @@ bb_dismiss_governor_button = {
             add_modifier = {
                 name = bb_governor_dismissal_backlash
                 months = 3
+                is_decaying = yes
+            }
+        }
+        else_if = {
+            limit = { has_law_or_variant = law_type:law_hereditary_bureaucrats }
+            add_radicals = {
+                value = small_radicals
+                interest_group = scope:bb_gov_out.interest_group
+            }
+            add_radicals = {
+                value = small_radicals
+                pop_type = aristocrats
+            }
+            add_modifier = {
+                name = bb_governor_dismissal_backlash
+                months = 24
+                is_decaying = yes
+            }
+        }
+        else_if = {
+            limit = { has_law = law_type:law_elected_bureaucrats }
+            add_radicals = {
+                value = small_radicals
+                interest_group = scope:bb_gov_out.interest_group
+            }
+            add_radicals = {
+                value = small_radicals
+                interest_group = ig:ig_intelligentsia
+            }
+            add_modifier = {
+                name = bb_governor_dismissal_backlash
+                months = 18
                 is_decaying = yes
             }
         }
@@ -210,5 +248,61 @@ bb_market_holiday_button = {
             pop_type = shopkeepers
         }
         post_notification = bb_news_market_holiday
+    }
+}
+
+# ── Open-Market Operations (the direct lever) ───────────────────
+# The National Bank leans on the market: buying to prop up a
+# faltering trend, or selling to cool an overheating one. Either
+# way it plants a fresh bb_market_trend (the same variable market
+# events use) and gives an immediate jolt — the momentum needle
+# swings in response. This is the player's hand on the tiller of
+# the otherwise autonomous market. Opens bb.60. 18-month cooldown
+# keeps it a deliberate act, not a monthly habit.
+
+bb_open_market_operations_button = {
+    name = "bb_open_market_operations_button"
+    desc = "bb_open_market_operations_button_desc"
+
+    visible = { always = yes }
+
+    cooldown = { months = 18 }
+
+    ai_chance = {
+        value = 0
+    }
+
+    effect = {
+        trigger_event = { id = bb.60 popup = yes }
+    }
+}
+
+# ── Commission a Market Survey (forecasting) ────────────────────
+# Pay for a reading of where the market is actually headed. Opens
+# bb.61, whose text is written live from the underlying trend and
+# the current market band — the plain-language "outlook" the bars
+# only hint at. Costs a little treasury and carries a 12-month
+# cooldown: foresight is a resource, not a free glance.
+
+bb_market_survey_button = {
+    name = "bb_market_survey_button"
+    desc = "bb_market_survey_button_desc"
+
+    visible = { always = yes }
+
+    cooldown = { months = 12 }
+
+    ai_chance = {
+        value = 0
+    }
+
+    effect = {
+        add_treasury = {
+            value = gdp
+            multiply = -0.0008
+            min = -200000
+            max = -2000
+        }
+        trigger_event = { id = bb.61 popup = yes }
     }
 }

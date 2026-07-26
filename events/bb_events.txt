@@ -17,7 +17,6 @@ bb.1 = {
     type = country_event
     placement = ROOT
     title = bb.1.t
-    desc  = bb.1.desc
 
     duration = 3
 
@@ -31,7 +30,24 @@ bb.1 = {
         bb_find_governor_candidates = yes
     }
 
-    # The financier
+    desc = {
+        first_valid = {
+            triggered_desc = {
+                trigger = { has_law_or_variant = law_type:law_hereditary_bureaucrats }
+                desc = bb.1.desc.hereditary
+            }
+            triggered_desc = {
+                trigger = { has_law = law_type:law_elected_bureaucrats }
+                desc = bb.1.desc.elected
+            }
+            triggered_desc = {
+                trigger = { always = yes }
+                desc = bb.1.desc.appointed
+            }
+        }
+    }
+
+    # The financier (Appointed Bureaucrats)
     option = {
         name = bb.1.a
         trigger = { exists = scope:bb_gov_cand_fin }
@@ -39,7 +55,7 @@ bb.1 = {
         bb_seat_governor = { CANDIDATE = bb_gov_cand_fin }
     }
 
-    # The statesman
+    # The statesman (Appointed Bureaucrats)
     option = {
         name = bb.1.b
         trigger = { exists = scope:bb_gov_cand_gov }
@@ -47,12 +63,28 @@ bb.1 = {
         bb_seat_governor = { CANDIDATE = bb_gov_cand_gov }
     }
 
-    # The scholar
+    # The scholar (Appointed Bureaucrats)
     option = {
         name = bb.1.c
         trigger = { exists = scope:bb_gov_cand_sch }
         custom_tooltip = bb.1.c.tt
         bb_seat_governor = { CANDIDATE = bb_gov_cand_sch }
+    }
+
+    # The patrician (Hereditary Bureaucrats / Crownland Diets)
+    option = {
+        name = bb.1.d
+        trigger = { exists = scope:bb_gov_cand_heir }
+        custom_tooltip = bb.1.d.tt
+        bb_seat_governor = { CANDIDATE = bb_gov_cand_heir }
+    }
+
+    # The administrator (Elected Bureaucrats)
+    option = {
+        name = bb.1.e
+        trigger = { exists = scope:bb_gov_cand_civil }
+        custom_tooltip = bb.1.e.tt
+        bb_seat_governor = { CANDIDATE = bb_gov_cand_civil }
     }
 
     # Leave the seat empty for now
@@ -101,17 +133,18 @@ bb.3 = {
     }
 }
 
-# ── bb.10: Dissolve Monopoly — Character Selection ──────────
-# Triggered by bb_dissolve_monopoly_decision.
-# Player selects a government IG leader to champion the case.
-# Each option gates on that IG being in government.
-# The fallback (civil service) is always available as a last resort.
+# ── bb.10: Dissolve Monopoly — Governor Confirmation ─────────
+# Triggered by bb_dissolve_monopoly_button, which requires a
+# seated Bank Governor. The Governor is always the champion —
+# no player choice of IG anymore. scope:bb_case_leader/bb_case_ig
+# are set in immediate from the sitting governor and their IG,
+# then read by bb_apply_dissolution_effect. Flavor text varies
+# by the Governor's actual IG affiliation.
 
 bb.10 = {
     type = country_event
     placement = ROOT
     title = bb.10.t
-    desc  = bb.10.desc
 
     duration = 3
 
@@ -121,132 +154,46 @@ bb.10 = {
 
     on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
 
+    immediate = {
+        random_scope_character = {
+            limit = { has_trait = bb_bank_governor }
+            save_scope_as = bb_case_leader
+        }
+        scope:bb_case_leader = {
+            interest_group = { save_scope_as = bb_case_ig }
+        }
+    }
+
+    desc = {
+        first_valid = {
+            triggered_desc = {
+                trigger = {
+                    scope:bb_case_ig = { is_interest_group_type = ig_industrialists }
+                }
+                desc = bb.10.desc.industrialists
+            }
+            triggered_desc = {
+                trigger = {
+                    scope:bb_case_ig = { is_interest_group_type = ig_landowners }
+                }
+                desc = bb.10.desc.landowners
+            }
+            triggered_desc = {
+                trigger = {
+                    scope:bb_case_ig = { is_interest_group_type = ig_trade_unions }
+                }
+                desc = bb.10.desc.unions
+            }
+            triggered_desc = {
+                trigger = { always = yes }
+                desc = bb.10.desc.default
+            }
+        }
+    }
+
     option = {
         name = bb.10.a
-        trigger = {
-            ig:ig_intelligentsia = { is_in_government = yes }
-        }
-        ig:ig_intelligentsia = {
-            save_scope_as = bb_case_ig
-            leader = { save_scope_as = bb_case_leader }
-        }
         bb_apply_dissolution_effect = yes
-        trigger_event = { id = bb.11 days = 14 }
-    }
-
-    option = {
-        name = bb.10.b
-        trigger = {
-            ig:ig_trade_unions = { is_in_government = yes }
-        }
-        ig:ig_trade_unions = {
-            save_scope_as = bb_case_ig
-            leader = { save_scope_as = bb_case_leader }
-        }
-        bb_apply_dissolution_effect = yes
-        trigger_event = { id = bb.11 days = 14 }
-    }
-
-    option = {
-        name = bb.10.c
-        trigger = {
-            ig:ig_petty_bourgeoisie = { is_in_government = yes }
-        }
-        ig:ig_petty_bourgeoisie = {
-            save_scope_as = bb_case_ig
-            leader = { save_scope_as = bb_case_leader }
-        }
-        bb_apply_dissolution_effect = yes
-        trigger_event = { id = bb.11 days = 14 }
-    }
-
-    option = {
-        name = bb.10.d
-        trigger = {
-            ig:ig_industrialists = { is_in_government = yes }
-        }
-        ig:ig_industrialists = {
-            save_scope_as = bb_case_ig
-            leader = { save_scope_as = bb_case_leader }
-        }
-        bb_apply_dissolution_effect = yes
-        trigger_event = { id = bb.11 days = 14 }
-    }
-
-    option = {
-        name = bb.10.e
-        trigger = {
-            ig:ig_landowners = { is_in_government = yes }
-        }
-        ig:ig_landowners = {
-            save_scope_as = bb_case_ig
-            leader = { save_scope_as = bb_case_leader }
-        }
-        bb_apply_dissolution_effect = yes
-        trigger_event = { id = bb.11 days = 14 }
-    }
-
-    option = {
-        name = bb.10.f
-        trigger = {
-            ig:ig_devout = { is_in_government = yes }
-        }
-        ig:ig_devout = {
-            save_scope_as = bb_case_ig
-            leader = { save_scope_as = bb_case_leader }
-        }
-        bb_apply_dissolution_effect = yes
-        trigger_event = { id = bb.11 days = 14 }
-    }
-
-    option = {
-        name = bb.10.g
-        trigger = {
-            ig:ig_armed_forces = { is_in_government = yes }
-        }
-        ig:ig_armed_forces = {
-            save_scope_as = bb_case_ig
-            leader = { save_scope_as = bb_case_leader }
-        }
-        bb_apply_dissolution_effect = yes
-        trigger_event = { id = bb.11 days = 14 }
-    }
-
-    option = {
-        name = bb.10.h
-        trigger = {
-            ig:ig_rural_folk = { is_in_government = yes }
-        }
-        ig:ig_rural_folk = {
-            save_scope_as = bb_case_ig
-            leader = { save_scope_as = bb_case_leader }
-        }
-        bb_apply_dissolution_effect = yes
-        trigger_event = { id = bb.11 days = 14 }
-    }
-
-    # Fallback: no specific champion — civil service handles the case
-    # at standard strength with no trait/ideology scaling.
-    option = {
-        name = bb.10.z
-        default_option = yes
-        set_variable = {
-            name = bb_case_strength
-            value = -1
-            months = 24
-        }
-        add_modifier = {
-            name = bb_monopoly_dissolution
-            months = 24
-        }
-        add_radicals = {
-            value = medium_radicals
-            pop_type = capitalists
-        }
-        add_radicals = {
-            value = medium_radicals
-            pop_type = aristocrats
-        }
         trigger_event = { id = bb.11 days = 14 }
     }
 }
@@ -647,7 +594,6 @@ bb.40 = {
     type = country_event
     placement = ROOT
     title = bb.40.t
-    desc  = bb.40.desc
 
     duration = 3
 
@@ -661,7 +607,24 @@ bb.40 = {
         bb_find_governor_candidates = yes
     }
 
-    # The financier
+    desc = {
+        first_valid = {
+            triggered_desc = {
+                trigger = { has_law_or_variant = law_type:law_hereditary_bureaucrats }
+                desc = bb.40.desc.hereditary
+            }
+            triggered_desc = {
+                trigger = { has_law = law_type:law_elected_bureaucrats }
+                desc = bb.40.desc.elected
+            }
+            triggered_desc = {
+                trigger = { always = yes }
+                desc = bb.40.desc.appointed
+            }
+        }
+    }
+
+    # The financier (Appointed Bureaucrats)
     option = {
         name = bb.40.a
         trigger = { exists = scope:bb_gov_cand_fin }
@@ -669,7 +632,7 @@ bb.40 = {
         bb_seat_governor = { CANDIDATE = bb_gov_cand_fin }
     }
 
-    # The statesman
+    # The statesman (Appointed Bureaucrats)
     option = {
         name = bb.40.b
         trigger = { exists = scope:bb_gov_cand_gov }
@@ -677,12 +640,28 @@ bb.40 = {
         bb_seat_governor = { CANDIDATE = bb_gov_cand_gov }
     }
 
-    # The scholar
+    # The scholar (Appointed Bureaucrats)
     option = {
         name = bb.40.c
         trigger = { exists = scope:bb_gov_cand_sch }
         custom_tooltip = bb.40.c.tt
         bb_seat_governor = { CANDIDATE = bb_gov_cand_sch }
+    }
+
+    # The patrician (Hereditary Bureaucrats / Crownland Diets)
+    option = {
+        name = bb.40.d
+        trigger = { exists = scope:bb_gov_cand_heir }
+        custom_tooltip = bb.40.d.tt
+        bb_seat_governor = { CANDIDATE = bb_gov_cand_heir }
+    }
+
+    # The administrator (Elected Bureaucrats)
+    option = {
+        name = bb.40.e
+        trigger = { exists = scope:bb_gov_cand_civil }
+        custom_tooltip = bb.40.e.tt
+        bb_seat_governor = { CANDIDATE = bb_gov_cand_civil }
     }
 
     # Leave the seat empty
@@ -692,11 +671,39 @@ bb.40 = {
     }
 }
 
+# ── bb.41: Governor Died in Office (hidden, on_character_death) ─
+# Fired from on_character_death (bb_on_actions.txt). Root =
+# Character — the one who just died. Empties the seat the instant
+# its occupant dies, instead of waiting on bb_governor_admin_pulse's
+# next monthly vacancy check (which stays in place as a fallback
+# for other disappearance causes, e.g. exile). Hidden events must
+# not have options.
+
+bb.41 = {
+    type = character_event
+    hidden = yes
+
+    trigger = {
+        has_trait = bb_bank_governor
+        owner = { is_player = yes }
+    }
+
+    immediate = {
+        remove_trait = bb_bank_governor
+        owner = {
+            bb_clear_governor_office = yes
+            bb_market_jolt = { VALUE = -2 }
+            trigger_event = { id = bb.42 popup = yes }
+        }
+    }
+}
+
 # ── bb.42: The Governorship Falls Vacant ─────────────────────
-# Fired by bb_governor_admin_pulse when the seat was filled but
-# no living character carries the trait (death, exile). Cleanup
-# and the -2 market jolt already happened in the pulse; this
-# event informs the player and offers an immediate succession.
+# Fired by bb.41 on death, or by bb_governor_admin_pulse for other
+# disappearance causes (e.g. exile) where the seat was filled but
+# no living character carries the trait. Cleanup and the -2 market
+# jolt already happened at the call site; this event informs the
+# player and offers an immediate succession.
 
 bb.42 = {
     type = country_event
@@ -875,5 +882,156 @@ bb.50 = {
         name = bb.50.d
         default_option = yes
         custom_tooltip = bb.50.d.tt
+    }
+}
+
+# ── bb.60: Open-Market Operations ───────────────────────────
+# Opened by the Open-Market Operations button. The National Bank
+# leans on the market in one direction or the other by planting a
+# fresh bb_market_trend (the same drift variable market events
+# use) plus an immediate jolt. Supporting a weak market costs
+# money and breeds a little moral hazard; cooling an overheated
+# one costs money and political comfort but adds no hazard — it is
+# the deliberate counter to a runaway boom before the Risk Stance
+# multiplier turns a mania into a crash.
+
+bb.60 = {
+    type = country_event
+    placement = ROOT
+    title = bb.60.t
+    desc  = bb.60.desc
+
+    duration = 3
+
+    event_image = {
+        video = "europenorthamerica_capitalists_meeting"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    # Support the market: open-market purchases. The cost is a
+    # standing weekly outlay + authority for the run of the
+    # operation (bb_market_support_ops, 9 months), not a lump sum.
+    option = {
+        name = bb.60.a
+        custom_tooltip = bb.60.a.tt
+        add_modifier = {
+            name = bb_market_support_ops
+            months = 9
+        }
+        bb_market_jolt = { VALUE = 2 }
+        set_variable = { name = bb_market_trend value = 0.45 months = 9 }
+        bb_add_moral_hazard = { VALUE = 0.15 MONTHS = 18 }
+    }
+
+    # Cool the market: open-market sales and tighter discount rate.
+    # Ongoing cost via bb_market_cooling_ops (9 months) — less money,
+    # more authority, since tight money is the less popular course.
+    option = {
+        name = bb.60.b
+        custom_tooltip = bb.60.b.tt
+        add_modifier = {
+            name = bb_market_cooling_ops
+            months = 9
+        }
+        bb_market_jolt = { VALUE = -2 }
+        set_variable = { name = bb_market_trend value = -0.45 months = 9 }
+    }
+
+    # Hold the line
+    option = {
+        name = bb.60.c
+        default_option = yes
+        custom_tooltip = bb.60.c.tt
+    }
+}
+
+# ── bb.61: Market Survey ────────────────────────────────────
+# Opened by the Commission a Market Survey button (which charges
+# the fee). Pure information: the description is assembled live
+# from the underlying trend and the current Market Health band —
+# the plain-language outlook the bars only imply. No effects.
+
+bb.61 = {
+    type = country_event
+    placement = ROOT
+    title = bb.61.t
+
+    # Momentum reading, then the current market band, then the
+    # standing advice — three stacked paragraphs, each chosen live.
+    desc = {
+        first_valid = {
+            triggered_desc = {
+                trigger = {
+                    has_variable = bb_market_trend
+                    var:bb_market_trend >= 0.5
+                }
+                desc = bb.61.desc.up_strong
+            }
+            triggered_desc = {
+                trigger = {
+                    has_variable = bb_market_trend
+                    var:bb_market_trend >= 0.15
+                }
+                desc = bb.61.desc.up_mild
+            }
+            triggered_desc = {
+                trigger = {
+                    has_variable = bb_market_trend
+                    var:bb_market_trend <= -0.5
+                }
+                desc = bb.61.desc.down_strong
+            }
+            triggered_desc = {
+                trigger = {
+                    has_variable = bb_market_trend
+                    var:bb_market_trend <= -0.15
+                }
+                desc = bb.61.desc.down_mild
+            }
+            triggered_desc = {
+                trigger = { always = yes }
+                desc = bb.61.desc.flat
+            }
+        }
+        # Current market band, read off the band modifier the mod
+        # applies each month (rock-solid country trigger — no journal
+        # scope needed). The Growing band (60-79) applies no modifier,
+        # so it is the always-yes fallback.
+        first_valid = {
+            triggered_desc = {
+                trigger = { has_modifier = bb_market_booming }
+                desc = bb.61.desc.band_booming
+            }
+            triggered_desc = {
+                trigger = { has_modifier = bb_market_stable }
+                desc = bb.61.desc.band_stable
+            }
+            triggered_desc = {
+                trigger = { has_modifier = bb_market_contracting }
+                desc = bb.61.desc.band_contracting
+            }
+            triggered_desc = {
+                trigger = { has_modifier = bb_market_crashing }
+                desc = bb.61.desc.band_crashing
+            }
+            triggered_desc = {
+                trigger = { always = yes }
+                desc = bb.61.desc.band_growing
+            }
+        }
+        desc = bb.61.desc.guidance
+    }
+
+    duration = 3
+
+    event_image = {
+        video = "unspecific_signed_contract"
+    }
+
+    on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+
+    option = {
+        name = bb.61.a
     }
 }

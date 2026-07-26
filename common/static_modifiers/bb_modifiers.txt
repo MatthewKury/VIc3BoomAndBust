@@ -203,3 +203,22 @@ bb_coverup_strain = {
     icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
     country_authority_add = -25
 }
+
+# Open-Market Operations — Support (bb.60 option a). Runs 9 months,
+# matching the trend it plants, and doubles as the "operation
+# active" flag read by bb_apply_ops_cost. This modifier carries
+# only the flat, constant AUTHORITY cost; the money cost is a
+# recurring GDP-scaled treasury deduction applied monthly in
+# bb_apply_ops_cost (a static modifier value cannot read GDP).
+bb_market_support_ops = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    country_authority_add = -50
+}
+
+# Open-Market Operations — Cool (bb.60 option b). Tighter money and
+# open-market sales: a smaller GDP-scaled money cost than Support
+# (in bb_apply_ops_cost), with the same flat authority cost. 9 months.
+bb_market_cooling_ops = {
+    icon = gfx/interface/icons/timed_modifier_icons/modifier_statue_negative.dds
+    country_authority_add = -50
+}

@@ -802,77 +802,128 @@ bb_market_jolt = {
 # ── Bank Governor: Candidate Search ──────────────────────────
 # Scope: country. Shared by bb.1 (the JE launch event doubles as
 # the inaugural appointment) and bb.40 (the appoint button).
-# Saves up to three candidate scopes; the event options gate on
-# each existing. Every candidate must belong to an interest group
-# currently in government — the Bank answers to the coalition of
-# the day, not to whoever happens to be clever.
+# How the candidate pool is drawn depends on the nation's
+# Bureaucracy law (added 2026-07-22):
+#   Hereditary Bureaucrats (+ Crownland Diets variant) — the seat
+#     is the Landowners' birthright: a single candidate, that IG's
+#     own leader, regardless of government membership.
+#   Elected Bureaucrats — an apolitical career administrator,
+#     chosen on merit alone from anyone in the realm (no governing-
+#     coalition requirement at all): a single candidate.
+#   Appointed Bureaucrats (and any other/default state) — the
+#     original three-way political-patronage pool, unchanged.
+# Each branch saves up to three candidate scopes; the event options
+# gate on each existing, so an unpopulated scope just hides its
+# option automatically.
 
 bb_find_governor_candidates = {
-    # The financier: a magnate from the governing coalition,
-    # ideally one with entrepreneur skill traits
-    random_scope_character = {
-        limit = {
-            has_role_of_type = magnate
-            interest_group = { is_in_government = yes }
-            OR = {
-                has_trait = basic_entrepreneur
-                has_trait = experienced_entrepreneur
-                has_trait = expert_entrepreneur
+    if = {
+        limit = { has_law_or_variant = law_type:law_hereditary_bureaucrats }
+        # The heir: the Landowners' own interest group leader
+        ig:ig_landowners = {
+            leader = { save_scope_as = bb_gov_cand_heir }
+        }
+    }
+    else_if = {
+        limit = { has_law = law_type:law_elected_bureaucrats }
+        # The administrator: the realm's most capable civil servant,
+        # regardless of faction — ideally a master bureaucrat
+        random_scope_character = {
+            limit = {
+                NOT = { is_ruler_of_own_country = yes }
+                has_trait = master_bureaucrat
+            }
+            save_scope_as = bb_gov_cand_civil
+        }
+        if = {
+            limit = { NOT = { exists = scope:bb_gov_cand_civil } }
+            random_scope_character = {
+                limit = {
+                    NOT = { is_ruler_of_own_country = yes }
+                    OR = {
+                        has_trait = erudite
+                        has_trait = engineer
+                        has_trait = meticulous
+                        has_trait = innovative
+                    }
+                }
+                save_scope_as = bb_gov_cand_civil
             }
         }
-        save_scope_as = bb_gov_cand_fin
     }
-    if = {
-        limit = { NOT = { exists = scope:bb_gov_cand_fin } }
+    else = {
+        # The financier: a magnate from the governing coalition,
+        # ideally one with entrepreneur skill traits
         random_scope_character = {
             limit = {
                 has_role_of_type = magnate
                 interest_group = { is_in_government = yes }
+                OR = {
+                    has_trait = basic_entrepreneur
+                    has_trait = experienced_entrepreneur
+                    has_trait = expert_entrepreneur
+                }
             }
             save_scope_as = bb_gov_cand_fin
         }
-    }
+        if = {
+            limit = { NOT = { exists = scope:bb_gov_cand_fin } }
+            random_scope_character = {
+                limit = {
+                    has_role_of_type = magnate
+                    interest_group = { is_in_government = yes }
+                }
+                save_scope_as = bb_gov_cand_fin
+            }
+        }
 
-    # The statesman: a government interest group leader
-    # (never the ruler)
-    random_interest_group = {
-        limit = {
-            is_in_government = yes
-            leader ?= {
+        # The statesman: a government interest group leader
+        # (never the ruler)
+        random_interest_group = {
+            limit = {
+                is_in_government = yes
+                leader ?= {
+                    NOT = { is_ruler_of_own_country = yes }
+                }
+            }
+            leader = { save_scope_as = bb_gov_cand_gov }
+        }
+
+        # The scholar: a studious head for figures, drawn from the
+        # governing coalition
+        random_scope_character = {
+            limit = {
                 NOT = { is_ruler_of_own_country = yes }
+                interest_group = { is_in_government = yes }
+                OR = {
+                    has_trait = erudite
+                    has_trait = engineer
+                    has_trait = meticulous
+                    has_trait = innovative
+                }
             }
+            save_scope_as = bb_gov_cand_sch
         }
-        leader = { save_scope_as = bb_gov_cand_gov }
-    }
-
-    # The scholar: a studious head for figures, drawn from the
-    # governing coalition
-    random_scope_character = {
-        limit = {
-            NOT = { is_ruler_of_own_country = yes }
-            interest_group = { is_in_government = yes }
-            OR = {
-                has_trait = erudite
-                has_trait = engineer
-                has_trait = meticulous
-                has_trait = innovative
-            }
-        }
-        save_scope_as = bb_gov_cand_sch
     }
 }
 
 
 # ── Bank Governor: Seat a Candidate ──────────────────────────
 # Scope: country. CANDIDATE = name of a saved character scope
-# (without the scope: prefix). Grants the office trait, empowers
-# the governor's interest group, and opens the tenure ledger.
+# (without the scope: prefix). Grants the office trait and opens
+# the tenure ledger. Under Elected Bureaucrats the appointment is
+# apolitical merit, not patronage, so no interest group is
+# empowered by it — every other law grants bb_governor_patron
+# as before.
 
 bb_seat_governor = {
     scope:$CANDIDATE$ = {
         add_trait = bb_bank_governor
-        interest_group = {
-            add_modifier = { name = bb_governor_patron days = -1 }
+        if = {
+            limit = { NOT = { root = { has_law = law_type:law_elected_bureaucrats } } }
+            interest_group = {
+                add_modifier = { name = bb_governor_patron days = -1 }
+            }
         }
     }
     set_variable = bb_governor_seated
@@ -1069,5 +1120,39 @@ bb_remove_all_bb_modifiers = {
     if = {
         limit = { has_modifier = bb_monopoly_dominant }
         remove_modifier = bb_monopoly_dominant
+    }
+}
+
+
+# ── Open-Market Operations: recurring GDP-scaled budget cost ──
+# Scope: country. Called monthly from je_bb_financial's pulse
+# (player only). The ops modifiers (bb_market_support_ops /
+# bb_market_cooling_ops) run 9 months and double as the "operation
+# active" flag; while one is on the country, the National Bank
+# keeps spending, so we deduct a share of GDP each month here.
+# Authority is the flat, constant cost and lives on the modifiers
+# themselves — only the money is scaled to the size of the economy
+# (a static modifier's expenses value cannot read GDP, so it is
+# done as a treasury effect instead). The gdp-scaled add_treasury
+# is the same construct bb.50 uses; safe in a monthly pulse (never
+# tooltip-previewed). Magnitudes are a first pass — tune freely.
+bb_apply_ops_cost = {
+    if = {
+        limit = { has_modifier = bb_market_support_ops }
+        add_treasury = {
+            value = gdp
+            multiply = -0.0005
+            min = -150000
+            max = -1000
+        }
+    }
+    if = {
+        limit = { has_modifier = bb_market_cooling_ops }
+        add_treasury = {
+            value = gdp
+            multiply = -0.00025
+            min = -75000
+            max = -500
+        }
     }
 }

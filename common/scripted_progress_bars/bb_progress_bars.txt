@@ -12,7 +12,7 @@ bb_market_health_bar = {
     name = "bb_market_health_bar"
     desc = "bb_market_health_bar_desc"
 
-    double_sided_gold = yes
+    default_green = yes
 
     start_value = 50
     min_value = 0
@@ -403,7 +403,7 @@ bb_risk_stance_bar = {
     name = "bb_risk_stance_bar"
     desc = "bb_risk_stance_bar_desc"
 
-    default_green = yes
+    default_bad = yes
 
     start_value = 50
     min_value = 0
@@ -607,7 +607,7 @@ bb_monopoly_power_bar = {
     name = "bb_monopoly_power_bar"
     desc = "bb_monopoly_power_bar_desc"
 
-    default_bad = yes
+    default = yes
 
     start_value = 45
     min_value = 0
@@ -864,6 +864,108 @@ bb_monopoly_power_bar = {
                 }
             }
             multiply = 1.25
+        }
+    }
+}
+
+# ============================================================
+#  Bar 4: Market Momentum (bb_market_momentum_bar)
+#
+#  A two-sided "ticker" that makes the otherwise hidden
+#  bb_market_trend visible. The needle leans toward the bull
+#  (right) or bear (left) side according to the underlying
+#  trend, and eases back to a neutral centre once the trend
+#  expires. It is a READ-OUT of momentum, not a new input to
+#  the simulation — nothing else reads this bar.
+#
+#  double_sided_gold: centred at 0, desc = bear side (left),
+#  second_desc = bull side (right). Range +-6.
+#
+#  Only the player ever plants bb_market_trend (AI never rolls
+#  market events), so for the AI the needle sits inert at the
+#  centre and the reversion rows never fire.
+# ============================================================
+
+bb_market_momentum_bar = {
+    name = "bb_market_momentum_bar"
+    desc = "bb_market_momentum_bear_desc"
+    second_desc = "bb_market_momentum_bull_desc"
+
+    double_sided_gold = yes
+
+    start_value = 0
+    min_value = -6
+    max_value = 6
+
+    monthly_progress = {
+        # The underlying trend pushes the needle. Trend runs
+        # roughly +-0.7 (clamped +-1.5), so each month it nudges
+        # momentum a little further toward its direction; the
+        # reversion below is what stops it and, once the trend
+        # lapses, returns it to centre.
+        if = {
+            limit = { has_variable = bb_market_trend }
+            add = {
+                desc = "bb_momentum_trend"
+                value = var:bb_market_trend
+                min = -1.5
+                max = 1.5
+            }
+        }
+
+        # Mean reversion toward the neutral centre, stronger the
+        # further the needle has travelled. Read off the bar's own
+        # position (start-of-month), the same self-read pattern the
+        # other bars use. A sustained strong trend still overpowers
+        # this and pins the needle near a rail; a weak or expiring
+        # one lets it drift back to calm.
+        if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_market_momentum_bar)" <= -4.5
+                }
+            }
+            add = { desc = "bb_momentum_settle" value = 0.9 }
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_market_momentum_bar)" <= -2.5
+                }
+            }
+            add = { desc = "bb_momentum_settle" value = 0.4 }
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_market_momentum_bar)" <= -1
+                }
+            }
+            add = { desc = "bb_momentum_settle" value = 0.15 }
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_market_momentum_bar)" >= 4.5
+                }
+            }
+            add = { desc = "bb_momentum_settle" value = -0.9 }
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_market_momentum_bar)" >= 2.5
+                }
+            }
+            add = { desc = "bb_momentum_settle" value = -0.4 }
+        }
+        else_if = {
+            limit = {
+                scope:journal_entry = {
+                    "scripted_bar_progress(bb_market_momentum_bar)" >= 1
+                }
+            }
+            add = { desc = "bb_momentum_settle" value = -0.15 }
         }
     }
 }

@@ -24,3 +24,10 @@ on_government_reformed = {
 on_election_campaign_end = {
     events = { bb.3 }
 }
+
+# The Bank Governor's seat empties the instant its occupant dies
+# (bb.41), instead of waiting for the next monthly vacancy check.
+# Root = Character for this hook.
+on_character_death = {
+    events = { bb.41 }
+}

@@ -25,9 +25,12 @@ je_bb_financial = {
     }
 
     scripted_progress_bar = bb_market_health_bar
+    scripted_progress_bar = bb_market_momentum_bar
     scripted_progress_bar = bb_risk_stance_bar
     scripted_progress_bar = bb_monopoly_power_bar
 
+    scripted_button = bb_open_market_operations_button
+    scripted_button = bb_market_survey_button
     scripted_button = bb_fiscal_temperature_button
     scripted_button = bb_dissolve_monopoly_button
     scripted_button = bb_appoint_governor_button
@@ -65,6 +68,7 @@ je_bb_financial = {
                 bb_update_market_relations_cap = yes
                 bb_roll_market_event = yes
                 bb_governor_admin_pulse = yes
+                bb_apply_ops_cost = yes
                 bb_apply_market_health_modifier = yes
                 bb_apply_risk_stance_modifier = yes
                 bb_apply_monopoly_modifier = yes
